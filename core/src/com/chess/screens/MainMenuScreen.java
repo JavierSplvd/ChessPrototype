@@ -3,14 +3,14 @@ package com.chess.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.chess.Chess;
 
@@ -20,30 +20,43 @@ public class MainMenuScreen implements Screen {
     private Chess chess;
     private final Skin skin = new Skin(Gdx.files.internal("skin/skin.json"));
 
-    public MainMenuScreen(Chess chess) {
+    public MainMenuScreen(final Chess chess) {
         this.chess = chess;
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        chess.resourceManager.loadMainScreenBackground();
-        chess.resourceManager.assetManager.finishLoading();
-        Actor background = new Background((Texture) chess.resourceManager.assetManager.get("MainScreenBackground.png"));
-        stage.addActor(background);
+        addActorsToStage();
 
         Table table = new Table();
         table.setFillParent(true);
         TextButton newGame = new TextButton("New Game", skin);
-        newGame.addListener(new InputListener() {
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
-
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("New Game pressed");
+        newGame.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                chess.changeScreenTo(Chess.BOARD);
             }
         });
+        newGame.pad(10, 20, 10, 20);
         table.add(newGame);
+        table.row().pad(30, 0, 30, 0);
+        table.debug();
+        TextButton exit = new TextButton("Exit", skin);
+        exit.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.exit();
+            }
+        });
+        exit.pad(10, 20, 10, 20);
+        table.add(exit);
         stage.addActor(table);
+    }
+
+    private void addActorsToStage() {
+        chess.resourceManager.loadMainScreenBackground();
+        chess.resourceManager.assetManager.finishLoading();
+        Actor background = new Background((Texture) chess.resourceManager.assetManager.get("MainScreenBackground.png"));
+        stage.addActor(background);
     }
 
     @Override
@@ -81,6 +94,6 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
     }
 }

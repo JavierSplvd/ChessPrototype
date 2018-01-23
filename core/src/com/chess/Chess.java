@@ -9,6 +9,7 @@ public class Chess extends Game {
 
     private MainMenuScreen mainMenuScreen;
     private LoadingScreen loadingScreen;
+    public ResourceManager resourceManager = new ResourceManager();
 
     public final static int MENU = 0;
 

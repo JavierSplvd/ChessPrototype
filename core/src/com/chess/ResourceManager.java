@@ -11,6 +11,7 @@ public class ResourceManager {
     private final String greenTile = "GreenTile.png";
     private final String grayTile = "GreyTile.png";
     private final String mainScreenBackground = "MainScreenBackground.png";
+    private final String WPawn = "WPawn.png";
 
     public void loadMainScreenBackground() {
         assetManager.load(mainScreenBackground, Texture.class);
@@ -20,5 +21,13 @@ public class ResourceManager {
         assetManager.load(greenTile, Texture.class);
         assetManager.load(grayTile, Texture.class);
 
+    }
+
+    public void loadWhitePieces() {
+        assetManager.load(WPawn, Texture.class);
+    }
+
+    public Texture getWPawn() {
+        return assetManager.get(WPawn);
     }
 }

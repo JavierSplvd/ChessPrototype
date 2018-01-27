@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.chess.Chess;
+import com.chess.screens.actors.Pawn;
+import com.chess.screens.actors.Tile;
 
 public class BoardScreen implements Screen {
 
@@ -16,9 +18,10 @@ public class BoardScreen implements Screen {
 
     public BoardScreen(Chess chess) {
         this.chess = chess;
-        StretchViewport viewport = new StretchViewport(960,540);
+        StretchViewport viewport = new StretchViewport(960, 540);
         stage = new Stage(viewport);
         createTiles();
+        createWhitePieces();
     }
 
     private void createTiles() {
@@ -33,6 +36,17 @@ public class BoardScreen implements Screen {
             }
         }
         stage.addActor(boardTiles);
+    }
+
+    private void createWhitePieces() {
+        chess.resourceManager.loadWhitePieces();
+        chess.resourceManager.assetManager.finishLoading();
+        Group whitePieces = new Group();
+        for (int p = 0; p < 8; p++) {
+            Pawn pawn = new Pawn(chess.resourceManager.getWPawn(), p, 1);
+            whitePieces.addActor(pawn);
+        }
+        stage.addActor(whitePieces);
     }
 
     @Override

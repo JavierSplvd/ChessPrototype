@@ -1,4 +1,4 @@
-package com.chess.screens;
+package com.chess.screens.actors;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -23,8 +23,8 @@ public class Tile extends Actor {
     }
 
     public void setBoardPosition(int i, int j) {
-        xCenterPosition = (i + 1 / 2f) * width;
-        yCenterPosition = (j + 1 / 2f) * height;
+        xCenterPosition = ChessGaphics.BOARD_X_OFFSET + (i + 1 / 2f) * width;
+        yCenterPosition = ChessGaphics.BOARD_Y_OFFSET + (j + 1 / 2f) * height;
         setX(xCenterPosition);
         setY(yCenterPosition);
     }
@@ -35,8 +35,8 @@ public class Tile extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        float bottomLeftX = ChessGaphics.BOARD_X_OFFSET + xCenterPosition - width / 2;
-        float bottomLeftY = ChessGaphics.BOARD_Y_OFFSET + yCenterPosition - height / 2;
+        float bottomLeftX =  xCenterPosition - width / 2;
+        float bottomLeftY =  yCenterPosition - height / 2;
         batch.setColor(1, 1, 1, alpha);
         batch.draw(texture, bottomLeftX, bottomLeftY, width, height);
         batch.setColor(1, 1, 1, 1);

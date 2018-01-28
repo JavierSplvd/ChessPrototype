@@ -2,8 +2,7 @@ package com.chess;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.chess.screens.BoardScreen;
+import com.chess.screens.board.BoardScreen;
 import com.chess.screens.LoadingScreen;
 import com.chess.screens.MainMenuScreen;
 

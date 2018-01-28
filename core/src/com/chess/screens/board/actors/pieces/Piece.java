@@ -1,4 +1,4 @@
-package com.chess.screens.actors;
+package com.chess.screens.board.actors.pieces;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;

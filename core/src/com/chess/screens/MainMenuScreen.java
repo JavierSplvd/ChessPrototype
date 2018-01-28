@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.chess.Chess;
-import com.chess.screens.actors.Background;
+import com.chess.screens.board.actors.Background;
 
 public class MainMenuScreen implements Screen {
 

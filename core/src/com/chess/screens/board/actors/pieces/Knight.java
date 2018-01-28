@@ -1,12 +1,11 @@
-package com.chess.screens.actors;
+package com.chess.screens.board.actors.pieces;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.chess.ChessGaphics;
 
-public class Pawn extends Piece {
+public class Knight extends Piece{
 
-    public Pawn(Texture texture, int i, int j) {
+    public Knight(Texture texture, int i, int j) {
         super(texture);
         setBoardPosition(i, j);
     }
@@ -17,5 +16,4 @@ public class Pawn extends Piece {
         float bottomLeftY = yCenterPosition - height / 2;
         batch.draw(texture, bottomLeftX, bottomLeftY, width, height);
     }
-
 }

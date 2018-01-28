@@ -1,4 +1,4 @@
-package com.chess.screens;
+package com.chess.screens.board;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -8,8 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.chess.Chess;
-import com.chess.screens.actors.Pawn;
-import com.chess.screens.actors.Tile;
+import com.chess.screens.board.actors.pieces.*;
+import com.chess.screens.board.actors.Tile;
 
 public class BoardScreen implements Screen {
 
@@ -46,6 +46,23 @@ public class BoardScreen implements Screen {
             Pawn pawn = new Pawn(chess.resourceManager.getWPawn(), p, 1);
             whitePieces.addActor(pawn);
         }
+        King king = new King(chess.resourceManager.getWKing(), 4, 0);
+        Queen queen = new Queen(chess.resourceManager.getWQueen(), 3, 0);
+        Bishop bishop1 = new Bishop(chess.resourceManager.getWBishop(), 2, 0);
+        Bishop bishop2 = new Bishop(chess.resourceManager.getWBishop(), 5, 0);
+        Knight knight1 = new Knight(chess.resourceManager.getWKnight(), 1, 0);
+        Knight knight2 = new Knight(chess.resourceManager.getWKnight(), 6, 0);
+        Rook rook1 = new Rook(chess.resourceManager.getWRook(), 0, 0);
+        Rook rook2 = new Rook(chess.resourceManager.getWRook(), 7, 0);
+        whitePieces.addActor(king);
+        whitePieces.addActor(queen);
+        whitePieces.addActor(bishop1);
+        whitePieces.addActor(bishop2);
+        whitePieces.addActor(knight1);
+        whitePieces.addActor(knight2);
+        whitePieces.addActor(rook1);
+        whitePieces.addActor(rook2);
+
         stage.addActor(whitePieces);
     }
 

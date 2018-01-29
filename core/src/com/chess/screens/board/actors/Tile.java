@@ -20,6 +20,7 @@ public class Tile extends Actor {
     public Tile(Texture texture) {
         this.texture = texture;
         alpha = 0.8f + r.nextFloat() * 0.2f;
+        alpha = 1;
     }
 
     public void setBoardPosition(int i, int j) {

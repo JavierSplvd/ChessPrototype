@@ -8,8 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.chess.Chess;
-import com.chess.screens.board.actors.pieces.*;
+import com.chess.screens.board.actors.Background;
 import com.chess.screens.board.actors.Tile;
+import com.chess.screens.board.actors.pieces.*;
 
 public class BoardScreen implements Screen {
 
@@ -20,8 +21,17 @@ public class BoardScreen implements Screen {
         this.chess = chess;
         StretchViewport viewport = new StretchViewport(960, 540);
         stage = new Stage(viewport);
+        createBackground();
         createTiles();
         createWhitePieces();
+        createBlackPieces();
+    }
+
+    private void createBackground() {
+        chess.resourceManager.loadBoardBackground();
+        chess.resourceManager.assetManager.finishLoading();
+        Background background = new Background(chess.resourceManager.getBoardBackground());
+        stage.addActor(background);
     }
 
     private void createTiles() {
@@ -64,6 +74,34 @@ public class BoardScreen implements Screen {
         whitePieces.addActor(rook2);
 
         stage.addActor(whitePieces);
+    }
+
+    private void createBlackPieces() {
+        chess.resourceManager.loadBlackPieces();
+        chess.resourceManager.assetManager.finishLoading();
+        Group blackPieces = new Group();
+        for (int p = 0; p < 8; p++) {
+            Pawn pawn = new Pawn(chess.resourceManager.getBPawn(), p, 6);
+            blackPieces.addActor(pawn);
+        }
+        King king = new King(chess.resourceManager.getBKing(), 3, 7);
+        Queen queen = new Queen(chess.resourceManager.getBQueen(), 4, 7);
+        Bishop bishop1 = new Bishop(chess.resourceManager.getBBishop(), 2, 7);
+        Bishop bishop2 = new Bishop(chess.resourceManager.getBBishop(), 5, 7);
+        Knight knight1 = new Knight(chess.resourceManager.getBKnight(), 1, 7);
+        Knight knight2 = new Knight(chess.resourceManager.getBKnight(), 6, 7);
+        Rook rook1 = new Rook(chess.resourceManager.getBRook(), 0, 7);
+        Rook rook2 = new Rook(chess.resourceManager.getBRook(), 7, 7);
+        blackPieces.addActor(king);
+        blackPieces.addActor(queen);
+        blackPieces.addActor(bishop1);
+        blackPieces.addActor(bishop2);
+        blackPieces.addActor(knight1);
+        blackPieces.addActor(knight2);
+        blackPieces.addActor(rook1);
+        blackPieces.addActor(rook2);
+
+        stage.addActor(blackPieces);
     }
 
     @Override

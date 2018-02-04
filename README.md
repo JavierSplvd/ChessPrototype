@@ -1,2 +1,2 @@
 # Learning Libgdx
-![alt text](screenshot.png)
+![alt text](screenshot.PNG)

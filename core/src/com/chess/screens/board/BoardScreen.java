@@ -17,27 +17,34 @@ import com.chess.screens.board.actors.pieces.*;
 public class BoardScreen implements Screen {
 
     private Chess chess;
-    private final Stage stage;
+    private Stage stage;
     private final PieceFactory pieceFactory;
+    private StateMachine stateMachine;
 
     public BoardScreen(Chess chess) {
         this.chess = chess;
         pieceFactory = new PieceFactory(this, chess.resourceManager);
+        stateMachine = new StateMachine();
+        createStage();
+        createBackground();
+        createTiles();
+        initializeMovementTiles();
+        createWhitePieces();
+        createBlackPieces();
+        stage.addActor(stateMachine.ui.getUI());
+    }
+
+    private void createStage() {
         StretchViewport viewport = new StretchViewport(960, 540);
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
         stage.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
                 System.out.println("Clicked stage");
+                stateMachine.nextState();
             }
         });
-        createBackground();
-        createTiles();
-        initializeMovementTiles();
-        createWhitePieces();
-        createBlackPieces();
     }
 
     private void initializeMovementTiles() {
@@ -71,17 +78,17 @@ public class BoardScreen implements Screen {
         chess.resourceManager.assetManager.finishLoading();
         Group whitePieces = new Group();
         for (int p = 0; p < 8; p++) {
-            Pawn pawn = pieceFactory.createPawn(Chess.WHITES, p, 1);
+            Pawn pawn = pieceFactory.createPawn(Chess.PLAYER.WHITES, p, 1);
             whitePieces.addActor(pawn);
         }
-        King king = pieceFactory.createKing(Chess.WHITES);
-        Queen queen = pieceFactory.createQueen(Chess.WHITES);
-        Bishop bishop1 = pieceFactory.createBishop(Chess.WHITES, 2, 0);
-        Bishop bishop2 = pieceFactory.createBishop(Chess.WHITES, 5, 0);
-        Knight knight1 = pieceFactory.createKnight(Chess.WHITES, 1, 0);
-        Knight knight2 = pieceFactory.createKnight(Chess.WHITES, 6, 0);
-        Rook rook1 = pieceFactory.createRook(Chess.WHITES, 0, 0);
-        Rook rook2 = pieceFactory.createRook(Chess.WHITES, 7, 0);
+        King king = pieceFactory.createKing(Chess.PLAYER.WHITES);
+        Queen queen = pieceFactory.createQueen(Chess.PLAYER.WHITES);
+        Bishop bishop1 = pieceFactory.createBishop(Chess.PLAYER.WHITES, 2, 0);
+        Bishop bishop2 = pieceFactory.createBishop(Chess.PLAYER.WHITES, 5, 0);
+        Knight knight1 = pieceFactory.createKnight(Chess.PLAYER.WHITES, 1, 0);
+        Knight knight2 = pieceFactory.createKnight(Chess.PLAYER.WHITES, 6, 0);
+        Rook rook1 = pieceFactory.createRook(Chess.PLAYER.WHITES, 0, 0);
+        Rook rook2 = pieceFactory.createRook(Chess.PLAYER.WHITES, 7, 0);
         whitePieces.addActor(king);
         whitePieces.addActor(queen);
         whitePieces.addActor(bishop1);
@@ -91,6 +98,7 @@ public class BoardScreen implements Screen {
         whitePieces.addActor(rook1);
         whitePieces.addActor(rook2);
 
+        whitePieces.debugAll();
         stage.addActor(whitePieces);
     }
 
@@ -99,17 +107,17 @@ public class BoardScreen implements Screen {
         chess.resourceManager.assetManager.finishLoading();
         Group blackPieces = new Group();
         for (int p = 0; p < 8; p++) {
-            Pawn pawn = pieceFactory.createPawn(Chess.BLACKS, p, 6);
+            Pawn pawn = pieceFactory.createPawn(Chess.PLAYER.BLACKS, p, 6);
             blackPieces.addActor(pawn);
         }
-        King king = pieceFactory.createKing(Chess.BLACKS);
-        Queen queen = pieceFactory.createQueen(Chess.BLACKS);
-        Bishop bishop1 = pieceFactory.createBishop(Chess.BLACKS, 2, 7);
-        Bishop bishop2 = pieceFactory.createBishop(Chess.BLACKS, 5, 7);
-        Knight knight1 = pieceFactory.createKnight(Chess.BLACKS, 1, 7);
-        Knight knight2 = pieceFactory.createKnight(Chess.BLACKS, 6, 7);
-        Rook rook1 = pieceFactory.createRook(Chess.BLACKS, 0, 7);
-        Rook rook2 = pieceFactory.createRook(Chess.BLACKS, 7, 7);
+        King king = pieceFactory.createKing(Chess.PLAYER.BLACKS);
+        Queen queen = pieceFactory.createQueen(Chess.PLAYER.BLACKS);
+        Bishop bishop1 = pieceFactory.createBishop(Chess.PLAYER.BLACKS, 2, 7);
+        Bishop bishop2 = pieceFactory.createBishop(Chess.PLAYER.BLACKS, 5, 7);
+        Knight knight1 = pieceFactory.createKnight(Chess.PLAYER.BLACKS, 1, 7);
+        Knight knight2 = pieceFactory.createKnight(Chess.PLAYER.BLACKS, 6, 7);
+        Rook rook1 = pieceFactory.createRook(Chess.PLAYER.BLACKS, 0, 7);
+        Rook rook2 = pieceFactory.createRook(Chess.PLAYER.BLACKS, 7, 7);
         blackPieces.addActor(king);
         blackPieces.addActor(queen);
         blackPieces.addActor(bishop1);
@@ -119,6 +127,7 @@ public class BoardScreen implements Screen {
         blackPieces.addActor(rook1);
         blackPieces.addActor(rook2);
 
+        blackPieces.debugAll();
         stage.addActor(blackPieces);
     }
 

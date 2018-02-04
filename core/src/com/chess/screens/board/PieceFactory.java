@@ -3,7 +3,6 @@ package com.chess.screens.board;
 import com.badlogic.gdx.graphics.Texture;
 import com.chess.Chess;
 import com.chess.ResourceManager;
-import com.chess.screens.board.BoardScreen;
 import com.chess.screens.board.actors.pieces.*;
 
 public class PieceFactory {
@@ -16,78 +15,78 @@ public class PieceFactory {
         this.resourceManager = resourceManager;
     }
 
-    public Pawn createPawn(int player, int x, int y) {
+    public Pawn createPawn(Chess.PLAYER player, int x, int y) {
         Texture texture;
-        if (player == Chess.WHITES) {
+        if (player == Chess.PLAYER.WHITES) {
             texture = resourceManager.getWPawn();
         } else {
             texture = resourceManager.getBPawn();
         }
-        Pawn pawn = new Pawn(texture, x, y);
+        Pawn pawn = new Pawn(player, texture, x, y);
         return pawn;
     }
 
-    public King createKing(int player) {
+    public King createKing(Chess.PLAYER player) {
         Texture texture;
         King king;
-        if (player == Chess.WHITES) {
+        if (player == Chess.PLAYER.WHITES) {
             texture = resourceManager.getWKing();
-            king = new King(texture, 3, 0);
+            king = new King(player, texture, 3, 0);
         } else {
             texture = resourceManager.getBKing();
-            king = new King(texture, 3, 7);
+            king = new King(player, texture, 3, 7);
         }
         return king;
     }
 
-    public Queen createQueen(int player) {
+    public Queen createQueen(Chess.PLAYER player) {
         Texture texture;
         Queen queen;
-        if (player == Chess.WHITES) {
+        if (player == Chess.PLAYER.WHITES) {
             texture = resourceManager.getWQueen();
-            queen = new Queen(texture, 4, 0);
+            queen = new Queen(player, texture, 4, 0);
         } else {
             texture = resourceManager.getBQueen();
-            queen = new Queen(texture, 4, 7);
+            queen = new Queen(player, texture, 4, 7);
         }
         return queen;
     }
 
-    public Rook createRook(int player, int x, int y) {
+    public Rook createRook(Chess.PLAYER player, int x, int y) {
         Texture texture;
         Rook rook;
-        if (player == Chess.WHITES) {
+        if (player == Chess.PLAYER.WHITES) {
             texture = resourceManager.getWRook();
-            rook = new Rook(texture, x, y);
+            rook = new Rook(player, texture, x, y);
         } else {
             texture = resourceManager.getBRook();
-            rook = new Rook(texture, x, y);
+            rook = new Rook(player, texture, x, y);
         }
         return rook;
     }
 
-    public Knight createKnight(int player, int x, int y) {
+    public Knight createKnight(Chess.PLAYER player, int x, int y) {
         Texture texture;
         Knight knight;
-        if (player == Chess.WHITES) {
+        if (player == Chess.PLAYER.WHITES) {
             texture = resourceManager.getWKnight();
-            knight = new Knight(texture, x, y);
+            knight = new Knight(player, texture, x, y);
         } else {
             texture = resourceManager.getBKnight();
-            knight = new Knight(texture, x, y);
+            knight = new Knight(player, texture, x, y);
         }
         return knight;
     }
 
-    public Bishop createBishop(int player, int x, int y) {
+    public Bishop createBishop(Chess.PLAYER player, int x, int y) {
         Texture texture;
         Bishop bishop;
-        if (player == Chess.WHITES) {
+        if (player == Chess.PLAYER.WHITES) {
             texture = resourceManager.getWBishop();
-            bishop = new Bishop(texture, x, y);
+            bishop = new Bishop(player, texture, x, y);
         } else {
             texture = resourceManager.getBBishop();
-            bishop = new Bishop(texture, x, y);
+            bishop = new Bishop(player, texture, x, y);
         }
         return bishop;
     }

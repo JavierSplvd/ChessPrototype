@@ -5,7 +5,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.chess.Chess;
 import com.chess.screens.board.actors.Background;
@@ -16,15 +18,31 @@ public class BoardScreen implements Screen {
 
     private Chess chess;
     private final Stage stage;
+    private final PieceFactory pieceFactory;
 
     public BoardScreen(Chess chess) {
         this.chess = chess;
+        pieceFactory = new PieceFactory(this, chess.resourceManager);
         StretchViewport viewport = new StretchViewport(960, 540);
         stage = new Stage(viewport);
+        Gdx.input.setInputProcessor(stage);
+        stage.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+                System.out.println("Clicked stage");
+            }
+        });
         createBackground();
         createTiles();
+        initializeMovementTiles();
         createWhitePieces();
         createBlackPieces();
+    }
+
+    private void initializeMovementTiles() {
+        Group movementTiles = new Group();
+        stage.addActor(movementTiles);
     }
 
     private void createBackground() {
@@ -53,17 +71,17 @@ public class BoardScreen implements Screen {
         chess.resourceManager.assetManager.finishLoading();
         Group whitePieces = new Group();
         for (int p = 0; p < 8; p++) {
-            Pawn pawn = new Pawn(chess.resourceManager.getWPawn(), p, 1);
+            Pawn pawn = pieceFactory.createPawn(Chess.WHITES, p, 1);
             whitePieces.addActor(pawn);
         }
-        King king = new King(chess.resourceManager.getWKing(), 4, 0);
-        Queen queen = new Queen(chess.resourceManager.getWQueen(), 3, 0);
-        Bishop bishop1 = new Bishop(chess.resourceManager.getWBishop(), 2, 0);
-        Bishop bishop2 = new Bishop(chess.resourceManager.getWBishop(), 5, 0);
-        Knight knight1 = new Knight(chess.resourceManager.getWKnight(), 1, 0);
-        Knight knight2 = new Knight(chess.resourceManager.getWKnight(), 6, 0);
-        Rook rook1 = new Rook(chess.resourceManager.getWRook(), 0, 0);
-        Rook rook2 = new Rook(chess.resourceManager.getWRook(), 7, 0);
+        King king = pieceFactory.createKing(Chess.WHITES);
+        Queen queen = pieceFactory.createQueen(Chess.WHITES);
+        Bishop bishop1 = pieceFactory.createBishop(Chess.WHITES, 2, 0);
+        Bishop bishop2 = pieceFactory.createBishop(Chess.WHITES, 5, 0);
+        Knight knight1 = pieceFactory.createKnight(Chess.WHITES, 1, 0);
+        Knight knight2 = pieceFactory.createKnight(Chess.WHITES, 6, 0);
+        Rook rook1 = pieceFactory.createRook(Chess.WHITES, 0, 0);
+        Rook rook2 = pieceFactory.createRook(Chess.WHITES, 7, 0);
         whitePieces.addActor(king);
         whitePieces.addActor(queen);
         whitePieces.addActor(bishop1);
@@ -81,17 +99,17 @@ public class BoardScreen implements Screen {
         chess.resourceManager.assetManager.finishLoading();
         Group blackPieces = new Group();
         for (int p = 0; p < 8; p++) {
-            Pawn pawn = new Pawn(chess.resourceManager.getBPawn(), p, 6);
+            Pawn pawn = pieceFactory.createPawn(Chess.BLACKS, p, 6);
             blackPieces.addActor(pawn);
         }
-        King king = new King(chess.resourceManager.getBKing(), 3, 7);
-        Queen queen = new Queen(chess.resourceManager.getBQueen(), 4, 7);
-        Bishop bishop1 = new Bishop(chess.resourceManager.getBBishop(), 2, 7);
-        Bishop bishop2 = new Bishop(chess.resourceManager.getBBishop(), 5, 7);
-        Knight knight1 = new Knight(chess.resourceManager.getBKnight(), 1, 7);
-        Knight knight2 = new Knight(chess.resourceManager.getBKnight(), 6, 7);
-        Rook rook1 = new Rook(chess.resourceManager.getBRook(), 0, 7);
-        Rook rook2 = new Rook(chess.resourceManager.getBRook(), 7, 7);
+        King king = pieceFactory.createKing(Chess.BLACKS);
+        Queen queen = pieceFactory.createQueen(Chess.BLACKS);
+        Bishop bishop1 = pieceFactory.createBishop(Chess.BLACKS, 2, 7);
+        Bishop bishop2 = pieceFactory.createBishop(Chess.BLACKS, 5, 7);
+        Knight knight1 = pieceFactory.createKnight(Chess.BLACKS, 1, 7);
+        Knight knight2 = pieceFactory.createKnight(Chess.BLACKS, 6, 7);
+        Rook rook1 = pieceFactory.createRook(Chess.BLACKS, 0, 7);
+        Rook rook2 = pieceFactory.createRook(Chess.BLACKS, 7, 7);
         blackPieces.addActor(king);
         blackPieces.addActor(queen);
         blackPieces.addActor(bishop1);
@@ -145,9 +163,9 @@ public class BoardScreen implements Screen {
     public Texture getTextureGivenIndexes(int column, int row) {
         int sum = column + row;
         if (sum % 2 == 0) {
-            return chess.resourceManager.assetManager.get("GreyTile.png");
-        } else {
             return chess.resourceManager.assetManager.get("GreenTile.png");
+        } else {
+            return chess.resourceManager.assetManager.get("GreyTile.png");
 
         }
     }

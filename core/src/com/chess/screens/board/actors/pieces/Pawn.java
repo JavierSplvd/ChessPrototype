@@ -16,5 +16,4 @@ public class Pawn extends Piece {
         float bottomLeftY = yCenterPosition - height / 2;
         batch.draw(texture, bottomLeftX, bottomLeftY, width, height);
     }
-
 }

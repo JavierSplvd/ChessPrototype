@@ -39,7 +39,6 @@ public class MainMenuScreen implements Screen {
         newGame.pad(10, 20, 10, 20);
         table.add(newGame);
         table.row().pad(30, 0, 30, 0);
-        table.debug();
         TextButton exit = new TextButton("Exit", skin);
         exit.addListener(new ChangeListener() {
             @Override
@@ -53,9 +52,9 @@ public class MainMenuScreen implements Screen {
     }
 
     private void addActorsToStage() {
-        chess.resourceManager.loadMainScreenBackground();
+        chess.resourceManager.loadBoardBackground();
         chess.resourceManager.assetManager.finishLoading();
-        Actor background = new Background((Texture) chess.resourceManager.assetManager.get("MainScreenBackground.png"));
+        Actor background = new Background((Texture) chess.resourceManager.assetManager.get("BoardBackground.png"));
         stage.addActor(background);
     }
 

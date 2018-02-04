@@ -16,6 +16,9 @@ public class Chess extends Game {
     public final static int MENU = 0;
     public final static int BOARD = 1;
 
+    public final static int WHITES = 0;
+    public final static int BLACKS = 1;
+
 
     @Override
     public void create() {

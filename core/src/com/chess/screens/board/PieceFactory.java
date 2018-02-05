@@ -22,7 +22,7 @@ public class PieceFactory {
         } else {
             texture = resourceManager.getBPawn();
         }
-        Pawn pawn = new Pawn(player, texture, x, y);
+        Pawn pawn = new Pawn(player, texture, x, y, boardScreen.getStateMachine());
         return pawn;
     }
 
@@ -31,10 +31,10 @@ public class PieceFactory {
         King king;
         if (player == Chess.PLAYER.WHITES) {
             texture = resourceManager.getWKing();
-            king = new King(player, texture, 3, 0);
+            king = new King(player, texture, 3, 0, boardScreen.getStateMachine());
         } else {
             texture = resourceManager.getBKing();
-            king = new King(player, texture, 3, 7);
+            king = new King(player, texture, 3, 7, boardScreen.getStateMachine());
         }
         return king;
     }
@@ -44,10 +44,10 @@ public class PieceFactory {
         Queen queen;
         if (player == Chess.PLAYER.WHITES) {
             texture = resourceManager.getWQueen();
-            queen = new Queen(player, texture, 4, 0);
+            queen = new Queen(player, texture, 4, 0, boardScreen.getStateMachine());
         } else {
             texture = resourceManager.getBQueen();
-            queen = new Queen(player, texture, 4, 7);
+            queen = new Queen(player, texture, 4, 7, boardScreen.getStateMachine());
         }
         return queen;
     }
@@ -57,10 +57,10 @@ public class PieceFactory {
         Rook rook;
         if (player == Chess.PLAYER.WHITES) {
             texture = resourceManager.getWRook();
-            rook = new Rook(player, texture, x, y);
+            rook = new Rook(player, texture, x, y, boardScreen.getStateMachine());
         } else {
             texture = resourceManager.getBRook();
-            rook = new Rook(player, texture, x, y);
+            rook = new Rook(player, texture, x, y, boardScreen.getStateMachine());
         }
         return rook;
     }
@@ -70,10 +70,10 @@ public class PieceFactory {
         Knight knight;
         if (player == Chess.PLAYER.WHITES) {
             texture = resourceManager.getWKnight();
-            knight = new Knight(player, texture, x, y);
+            knight = new Knight(player, texture, x, y, boardScreen.getStateMachine());
         } else {
             texture = resourceManager.getBKnight();
-            knight = new Knight(player, texture, x, y);
+            knight = new Knight(player, texture, x, y, boardScreen.getStateMachine());
         }
         return knight;
     }
@@ -83,10 +83,10 @@ public class PieceFactory {
         Bishop bishop;
         if (player == Chess.PLAYER.WHITES) {
             texture = resourceManager.getWBishop();
-            bishop = new Bishop(player, texture, x, y);
+            bishop = new Bishop(player, texture, x, y, boardScreen.getStateMachine());
         } else {
             texture = resourceManager.getBBishop();
-            bishop = new Bishop(player, texture, x, y);
+            bishop = new Bishop(player, texture, x, y, boardScreen.getStateMachine());
         }
         return bishop;
     }

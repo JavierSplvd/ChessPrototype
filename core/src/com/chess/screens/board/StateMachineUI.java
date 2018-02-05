@@ -12,14 +12,17 @@ public class StateMachineUI {
     private Table table;
     private Label player;
     private Label state;
+    private Label turnCount;
 
     public StateMachineUI(StateMachine stateMachine) {
         table = new Table(skin);
         table.setFillParent(true);
-        player = new Label(stateMachine.getPlayer(), skin);
+        player = new Label(stateMachine.getPlayerTurn(), skin);
         state = new Label(stateMachine.getCurrentState(), skin);
+        turnCount = new Label(stateMachine.getTurnCount(), skin);
         table.add(player).pad(0, 20, 0, 20);
-        table.add(state);
+        table.add(state).pad(0, 20, 0, 20);
+        table.add(turnCount);
         table.setPosition(-Gdx.graphics.getWidth() * 0.4f, Gdx.graphics.getHeight() * .45f);
     }
 
@@ -27,8 +30,9 @@ public class StateMachineUI {
         return table;
     }
 
-    public void update(Chess.PLAYER player, StateMachine.STATE currentState) {
+    public void update(Chess.PLAYER player, StateMachine.STATE currentState, String turnCount) {
         this.player.setText("" + player);
         this.state.setText(currentState.toString());
+        this.turnCount.setText(turnCount);
     }
 }

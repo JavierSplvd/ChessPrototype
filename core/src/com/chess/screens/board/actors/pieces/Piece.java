@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.chess.Chess;
 import com.chess.ChessGaphics;
+import com.chess.screens.board.StateMachine;
 
 public class Piece extends Actor {
 
@@ -14,11 +15,13 @@ public class Piece extends Actor {
     float height = ChessGaphics.TILE_HEIGHT;
     private float yBottomLeft;
     private float xBottomLeft;
-    private Chess.PLAYER side;
+    private Chess.PLAYER player;
+    private StateMachine stateMachine;
 
-    public Piece(Texture texture, Chess.PLAYER side) {
+    public Piece(Texture texture, Chess.PLAYER player, StateMachine stateMachine) {
         this.texture = texture;
-        this.side = side;
+        this.player = player;
+        this.stateMachine = stateMachine;
         setSize(width, height);
     }
 
@@ -29,5 +32,13 @@ public class Piece extends Actor {
         yBottomLeft = yCenterPosition - height / 2;
         setX(xBottomLeft);
         setY(yBottomLeft);
+    }
+
+    void choose() {
+        stateMachine.selectPiece(this);
+    }
+
+    public Chess.PLAYER getPlayer() {
+        return player;
     }
 }

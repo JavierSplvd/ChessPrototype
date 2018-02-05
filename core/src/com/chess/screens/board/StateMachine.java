@@ -1,26 +1,29 @@
 package com.chess.screens.board;
 
 import com.chess.Chess;
+import com.chess.screens.board.actors.pieces.Piece;
 
 public class StateMachine {
 
-    private Chess.PLAYER player;
+    private Chess.PLAYER playerTurn;
 
     private int turnCount = 0;
     private STATE currentState;
-    public StateMachineUI ui;
+    StateMachineUI ui;
 
+    private Piece pieceSelected;
 
     public enum STATE {
         CHOOSE, MOVE;
+
+
     }
     public StateMachine() {
-        player = Chess.PLAYER.WHITES;
+        playerTurn = Chess.PLAYER.WHITES;
         currentState = STATE.CHOOSE;
         ui = new StateMachineUI(this);
     }
-
-    public void nextState() {
+    private void nextState() {
         if (currentState == STATE.CHOOSE) {
             currentState = STATE.MOVE;
         } else if (currentState == STATE.MOVE) {
@@ -29,25 +32,36 @@ public class StateMachine {
         }
         updateUI();
     }
-
     private void updateUI() {
-        ui.update(player, currentState);
+        ui.update(playerTurn, currentState, getTurnCount());
     }
 
-    public void changeTurn() {
+    private void changeTurn() {
         turnCount += 1;
-        if (player == Chess.PLAYER.WHITES) {
-            player = Chess.PLAYER.BLACKS;
-        } else if (player == Chess.PLAYER.BLACKS) {
-            player = Chess.PLAYER.WHITES;
+        if (playerTurn == Chess.PLAYER.WHITES) {
+            playerTurn = Chess.PLAYER.BLACKS;
+        } else if (playerTurn == Chess.PLAYER.BLACKS) {
+            playerTurn = Chess.PLAYER.WHITES;
         }
     }
 
-    public String getPlayer() {
-        return player.toString();
+    public String getPlayerTurn() {
+        return playerTurn.toString();
     }
 
     public String getCurrentState() {
         return currentState.toString();
+    }
+
+    public String getTurnCount() {
+        return String.valueOf(turnCount);
+    }
+
+    public void selectPiece(Piece piece) {
+        if(currentState == STATE.CHOOSE && piece.getPlayer() == playerTurn){
+            System.out.println("Piece selected");
+            this.pieceSelected = piece;
+            nextState();
+        }
     }
 }

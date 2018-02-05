@@ -42,7 +42,6 @@ public class BoardScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Clicked stage");
-                stateMachine.nextState();
             }
         });
     }
@@ -177,5 +176,9 @@ public class BoardScreen implements Screen {
             return chess.resourceManager.assetManager.get("GreyTile.png");
 
         }
+    }
+
+    public StateMachine getStateMachine() {
+        return stateMachine;
     }
 }

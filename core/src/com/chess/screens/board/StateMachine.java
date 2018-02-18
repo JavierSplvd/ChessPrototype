@@ -1,6 +1,7 @@
 package com.chess.screens.board;
 
 import com.chess.Chess;
+import com.chess.screens.board.actors.MovementTiles;
 import com.chess.screens.board.actors.pieces.Piece;
 
 public class StateMachine {
@@ -12,17 +13,19 @@ public class StateMachine {
     StateMachineUI ui;
 
     private Piece pieceSelected;
+    private MovementTiles movementTiles;
 
     public enum STATE {
-        CHOOSE, MOVE;
-
-
+        CHOOSE, MOVE
     }
-    public StateMachine() {
+
+    public StateMachine(BoardScreen boardScreen) {
+        this.movementTiles = boardScreen.getMovementTiles();
         playerTurn = Chess.PLAYER.WHITES;
         currentState = STATE.CHOOSE;
         ui = new StateMachineUI(this);
     }
+
     private void nextState() {
         if (currentState == STATE.CHOOSE) {
             currentState = STATE.MOVE;
@@ -32,6 +35,7 @@ public class StateMachine {
         }
         updateUI();
     }
+
     private void updateUI() {
         ui.update(playerTurn, currentState, getTurnCount());
     }
@@ -58,10 +62,15 @@ public class StateMachine {
     }
 
     public void selectPiece(Piece piece) {
-        if(currentState == STATE.CHOOSE && piece.getPlayer() == playerTurn){
+        if (currentState == STATE.CHOOSE && piece.getPlayer() == playerTurn) {
             System.out.println("Piece selected");
             this.pieceSelected = piece;
+            createMovTiles();
             nextState();
         }
+    }
+
+    private void createMovTiles() {
+        movementTiles.createMovTiles(pieceSelected);
     }
 }

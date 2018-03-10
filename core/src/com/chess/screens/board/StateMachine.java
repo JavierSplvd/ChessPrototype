@@ -13,14 +13,15 @@ public class StateMachine {
     StateMachineUI ui;
 
     private Piece pieceSelected;
+
     private MovementTiles movementTiles;
 
-    public enum STATE {
-        CHOOSE, MOVE
-    }
 
-    public StateMachine(BoardScreen boardScreen) {
-        this.movementTiles = boardScreen.getMovementTiles();
+
+    public enum STATE {
+        CHOOSE, MOVE;
+    }
+    public StateMachine() {
         playerTurn = Chess.PLAYER.WHITES;
         currentState = STATE.CHOOSE;
         ui = new StateMachineUI(this);
@@ -49,6 +50,10 @@ public class StateMachine {
         }
     }
 
+    public void setMovementTiles(MovementTiles movementTiles) {
+        this.movementTiles = movementTiles;
+    }
+
     public String getPlayerTurn() {
         return playerTurn.toString();
     }
@@ -71,6 +76,6 @@ public class StateMachine {
     }
 
     private void createMovTiles() {
-        movementTiles.createMovTiles(pieceSelected);
+        movementTiles.createNewMovTiles(pieceSelected);
     }
 }

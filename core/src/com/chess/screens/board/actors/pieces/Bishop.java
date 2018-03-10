@@ -9,14 +9,14 @@ import com.chess.screens.board.StateMachine;
 
 public class Bishop extends Piece {
 
-    public Bishop(Chess.PLAYER player, Texture texture, int i, int j, final StateMachine stateMachine) {
+    public Bishop(Chess.PLAYER player, Texture texture, int i, int j, StateMachine stateMachine) {
         super(texture, player, stateMachine);
         setBoardPosition(i, j);
         addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("Bishop");
-                choose();
+                chooseThisPiece();
                 return false;
             }
         });

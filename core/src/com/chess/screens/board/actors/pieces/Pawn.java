@@ -16,7 +16,8 @@ public class Pawn extends Piece {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("Pawn");
-                choose();
+                chooseThisPiece();
+                
                 return false;
             }
         });

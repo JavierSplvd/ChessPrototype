@@ -10,18 +10,19 @@ public class ResourceManager {
     //    Textures
     private final String greenTile = "GreenTile.png";
     private final String grayTile = "GreyTile.png";
-    private final String mainScreenBackground = "MainScreenBackground.png";
     private final String boardBackground = "BoardBackground.png";
+    private final String blueTile = "BlueTile.png";
 
 
     private final String WPawn = "WPawn.png";
+
     private final String WKing = "WKing.png";
     private final String WQueen = "WQueen.png";
     private final String WBishop = "WBishop.png";
     private final String WKnight = "WKnight.png";
     private final String WRook = "WRook.png";
-
     private final String BPawn = "BPawn.png";
+
     private final String BKing = "BKing.png";
     private final String BQueen = "BQueen.png";
     private final String BBishop = "BBishop.png";
@@ -29,26 +30,44 @@ public class ResourceManager {
     private final String BRook = "BRook.png";
 
     public void loadMainScreenBackground() {
-        assetManager.load(mainScreenBackground, Texture.class);
+        assetManager.load(boardBackground, Texture.class);
+        assetManager.finishLoading();
     }
 
-    public void loadBoardBackground(){
+    public void loadBoardResources(){
+        loadTilesAssets();
+        loadWhitePieces();
+        loadBlackPieces();
+        loadBoardBackground();
+        assetManager.finishLoading();
+    }
+
+    private void loadBoardBackground() {
         assetManager.load(boardBackground, Texture.class);
     }
-
-    public void loadTilesAssets() {
+    private void loadTilesAssets() {
         assetManager.load(greenTile, Texture.class);
         assetManager.load(grayTile, Texture.class);
-
+        assetManager.load(blueTile, Texture.class);
     }
 
-    public void loadWhitePieces() {
+
+    private void loadWhitePieces() {
         assetManager.load(WPawn, Texture.class);
         assetManager.load(WKing, Texture.class);
         assetManager.load(WQueen, Texture.class);
         assetManager.load(WBishop, Texture.class);
         assetManager.load(WKnight, Texture.class);
         assetManager.load(WRook, Texture.class);
+    }
+
+    private void loadBlackPieces() {
+        assetManager.load(BPawn, Texture.class);
+        assetManager.load(BKing, Texture.class);
+        assetManager.load(BQueen, Texture.class);
+        assetManager.load(BBishop, Texture.class);
+        assetManager.load(BKnight, Texture.class);
+        assetManager.load(BRook, Texture.class);
     }
 
     public Texture getWPawn() {
@@ -99,16 +118,11 @@ public class ResourceManager {
         return assetManager.get(BRook);
     }
 
-    public void loadBlackPieces() {
-        assetManager.load(BPawn, Texture.class);
-        assetManager.load(BKing, Texture.class);
-        assetManager.load(BQueen, Texture.class);
-        assetManager.load(BBishop, Texture.class);
-        assetManager.load(BKnight, Texture.class);
-        assetManager.load(BRook, Texture.class);
-    }
-
     public Texture getBoardBackground() {
         return assetManager.get(boardBackground);
+    }
+
+    public Texture getMovementTileTexture() {
+        return assetManager.get(blueTile);
     }
 }

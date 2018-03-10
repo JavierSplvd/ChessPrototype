@@ -52,8 +52,7 @@ public class MainMenuScreen implements Screen {
     }
 
     private void addActorsToStage() {
-        chess.resourceManager.loadBoardBackground();
-        chess.resourceManager.assetManager.finishLoading();
+        chess.resourceManager.loadMainScreenBackground();
         Actor background = new Background((Texture) chess.resourceManager.assetManager.get("BoardBackground.png"));
         stage.addActor(background);
     }

@@ -16,7 +16,7 @@ public class Rook extends Piece {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("Rook");
-                choose();
+                chooseThisPiece();
                 return false;
             }
         });

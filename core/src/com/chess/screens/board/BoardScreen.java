@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.chess.Chess;
 import com.chess.screens.board.actors.Background;
+import com.chess.screens.board.actors.MovementTiles;
 import com.chess.screens.board.actors.Tile;
 import com.chess.screens.board.actors.pieces.*;
 
@@ -20,17 +21,19 @@ public class BoardScreen implements Screen {
     private Stage stage;
     private final PieceFactory pieceFactory;
     private StateMachine stateMachine;
+    private MovementTiles movementTiles;
 
     public BoardScreen(Chess chess) {
+        chess.resourceManager.loadBoardResources();
         this.chess = chess;
         pieceFactory = new PieceFactory(this, chess.resourceManager);
         stateMachine = new StateMachine();
         createStage();
         createBackground();
         createTiles();
-        initializeMovementTiles();
         createWhitePieces();
         createBlackPieces();
+        initializeMovementTiles();
         stage.addActor(stateMachine.ui.getUI());
     }
 
@@ -47,20 +50,17 @@ public class BoardScreen implements Screen {
     }
 
     private void initializeMovementTiles() {
-        Group movementTiles = new Group();
-        stage.addActor(movementTiles);
+        movementTiles = new MovementTiles(chess.resourceManager.getMovementTileTexture());
+        stage.addActor(movementTiles.getGroup());
+        stateMachine.setMovementTiles(movementTiles);
     }
 
     private void createBackground() {
-        chess.resourceManager.loadBoardBackground();
-        chess.resourceManager.assetManager.finishLoading();
         Background background = new Background(chess.resourceManager.getBoardBackground());
         stage.addActor(background);
     }
 
     private void createTiles() {
-        chess.resourceManager.loadTilesAssets();
-        chess.resourceManager.assetManager.finishLoading();
         Group boardTiles = new Group();
         for (int column = 0; column < 8; column++) {
             for (int row = 0; row < 8; row++) {
@@ -73,8 +73,6 @@ public class BoardScreen implements Screen {
     }
 
     private void createWhitePieces() {
-        chess.resourceManager.loadWhitePieces();
-        chess.resourceManager.assetManager.finishLoading();
         Group whitePieces = new Group();
         for (int p = 0; p < 8; p++) {
             Pawn pawn = pieceFactory.createPawn(Chess.PLAYER.WHITES, p, 1);
@@ -102,8 +100,6 @@ public class BoardScreen implements Screen {
     }
 
     private void createBlackPieces() {
-        chess.resourceManager.loadBlackPieces();
-        chess.resourceManager.assetManager.finishLoading();
         Group blackPieces = new Group();
         for (int p = 0; p < 8; p++) {
             Pawn pawn = pieceFactory.createPawn(Chess.PLAYER.BLACKS, p, 6);
@@ -168,7 +164,7 @@ public class BoardScreen implements Screen {
 
     }
 
-    public Texture getTextureGivenIndexes(int column, int row) {
+    private Texture getTextureGivenIndexes(int column, int row) {
         int sum = column + row;
         if (sum % 2 == 0) {
             return chess.resourceManager.assetManager.get("GreenTile.png");
@@ -180,5 +176,9 @@ public class BoardScreen implements Screen {
 
     public StateMachine getStateMachine() {
         return stateMachine;
+    }
+
+    public MovementTiles getMovementTiles() {
+        return movementTiles;
     }
 }

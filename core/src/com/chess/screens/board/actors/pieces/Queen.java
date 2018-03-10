@@ -16,7 +16,7 @@ public class Queen extends Piece {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("Queen");
-                choose();
+                chooseThisPiece();
                 return false;
             }
         });

@@ -9,6 +9,8 @@ import com.chess.screens.board.StateMachine;
 public class Piece extends Actor {
 
     Texture texture;
+    int xBoardCoord;
+    int yBoardCoord;
     float xCenterPosition;
     float yCenterPosition;
     float width = ChessGaphics.TILE_WIDTH;
@@ -26,6 +28,8 @@ public class Piece extends Actor {
     }
 
     public void setBoardPosition(int i, int j) {
+        xBoardCoord = i;
+        yBoardCoord = j;
         xCenterPosition = ChessGaphics.BOARD_X_OFFSET + (i + 1 / 2f) * width;
         yCenterPosition = ChessGaphics.BOARD_Y_OFFSET + (j + 1 / 2f) * height;
         xBottomLeft = xCenterPosition - width / 2;
@@ -34,11 +38,19 @@ public class Piece extends Actor {
         setY(yBottomLeft);
     }
 
-    void choose() {
+    void chooseThisPiece() {
         stateMachine.selectPiece(this);
     }
 
     public Chess.PLAYER getPlayer() {
         return player;
+    }
+
+    public int getxBoardCoord() {
+        return xBoardCoord;
+    }
+
+    public int getyBoardCoord() {
+        return yBoardCoord;
     }
 }

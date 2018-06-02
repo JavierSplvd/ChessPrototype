@@ -22,6 +22,8 @@ public class BoardScreen implements Screen {
     private final PieceFactory pieceFactory;
     private StateMachine stateMachine;
     private MovementTileGroup movementTileGroup;
+    private Group whitePieces;
+    private Group blackPieces;
 
     public BoardScreen(Chess chess) {
         chess.resourceManager.loadBoardResources();
@@ -73,7 +75,7 @@ public class BoardScreen implements Screen {
     }
 
     private void createWhitePieces() {
-        Group whitePieces = new Group();
+        whitePieces = new Group();
         for (int p = 0; p < 8; p++) {
             Pawn pawn = pieceFactory.createPawn(Chess.PLAYER.WHITES, p, 1);
             whitePieces.addActor(pawn);
@@ -100,7 +102,7 @@ public class BoardScreen implements Screen {
     }
 
     private void createBlackPieces() {
-        Group blackPieces = new Group();
+        blackPieces = new Group();
         for (int p = 0; p < 8; p++) {
             Pawn pawn = pieceFactory.createPawn(Chess.PLAYER.BLACKS, p, 6);
             blackPieces.addActor(pawn);

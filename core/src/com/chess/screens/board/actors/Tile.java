@@ -10,6 +10,8 @@ import java.util.Random;
 public class Tile extends Actor {
 
     private Texture texture;
+    private int xBoardCoord;
+    private int yBoardCoord;
     private float xCenterPosition;
     private float yCenterPosition;
     private float width = ChessGaphics.TILE_WIDTH;
@@ -27,6 +29,8 @@ public class Tile extends Actor {
     }
 
     public void setBoardPosition(int i, int j) {
+        xBoardCoord = i;
+        yBoardCoord = j;
         xCenterPosition = ChessGaphics.BOARD_X_OFFSET + (i + 1 / 2f) * width;
         yCenterPosition = ChessGaphics.BOARD_Y_OFFSET + (j + 1 / 2f) * height;
         xBottomLeft = xCenterPosition - width / 2;
@@ -46,5 +50,13 @@ public class Tile extends Actor {
         batch.setColor(1, 1, 1, alpha);
         batch.draw(texture, bottomLeftX, bottomLeftY, width, height);
         batch.setColor(1, 1, 1, 1);
+    }
+
+    public int getxBoardCoord() {
+        return xBoardCoord;
+    }
+
+    public int getyBoardCoord() {
+        return yBoardCoord;
     }
 }

@@ -18,7 +18,7 @@ public class Pawn extends Piece {
                 System.out.println("Pawn");
                 chooseThisPiece();
                 
-                return false;
+                return true;
             }
         });
     }

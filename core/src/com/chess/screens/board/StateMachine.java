@@ -1,7 +1,7 @@
 package com.chess.screens.board;
 
 import com.chess.Chess;
-import com.chess.screens.board.actors.MovementTiles;
+import com.chess.screens.board.actors.MovementTileGroup;
 import com.chess.screens.board.actors.pieces.Piece;
 
 public class StateMachine {
@@ -14,13 +14,14 @@ public class StateMachine {
 
     private Piece pieceSelected;
 
-    private MovementTiles movementTiles;
-
+    private MovementTileGroup movementTileGroup;
 
 
     public enum STATE {
         CHOOSE, MOVE;
+
     }
+
     public StateMachine() {
         playerTurn = Chess.PLAYER.WHITES;
         currentState = STATE.CHOOSE;
@@ -50,8 +51,8 @@ public class StateMachine {
         }
     }
 
-    public void setMovementTiles(MovementTiles movementTiles) {
-        this.movementTiles = movementTiles;
+    public void setMovementTileGroup(MovementTileGroup movementTileGroup) {
+        this.movementTileGroup = movementTileGroup;
     }
 
     public String getPlayerTurn() {
@@ -76,6 +77,14 @@ public class StateMachine {
     }
 
     private void createMovTiles() {
-        movementTiles.createNewMovTiles(pieceSelected);
+        movementTileGroup.createNewMovTiles(pieceSelected, this);
+    }
+
+    public void movePieceTo(int i, int j) {
+        if(currentState == STATE.MOVE){
+            pieceSelected.setBoardPosition(i, j);
+            movementTileGroup.clear();
+            nextState();
+        }
     }
 }

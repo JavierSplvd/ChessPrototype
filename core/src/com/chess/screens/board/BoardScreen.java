@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.chess.Chess;
 import com.chess.screens.board.actors.Background;
-import com.chess.screens.board.actors.MovementTiles;
+import com.chess.screens.board.actors.MovementTileGroup;
 import com.chess.screens.board.actors.Tile;
 import com.chess.screens.board.actors.pieces.*;
 
@@ -21,7 +21,7 @@ public class BoardScreen implements Screen {
     private Stage stage;
     private final PieceFactory pieceFactory;
     private StateMachine stateMachine;
-    private MovementTiles movementTiles;
+    private MovementTileGroup movementTileGroup;
 
     public BoardScreen(Chess chess) {
         chess.resourceManager.loadBoardResources();
@@ -50,9 +50,9 @@ public class BoardScreen implements Screen {
     }
 
     private void initializeMovementTiles() {
-        movementTiles = new MovementTiles(chess.resourceManager.getMovementTileTexture());
-        stage.addActor(movementTiles.getGroup());
-        stateMachine.setMovementTiles(movementTiles);
+        movementTileGroup = new MovementTileGroup(chess.resourceManager.getMovementTileTexture());
+        stage.addActor(movementTileGroup.getGroup());
+        stateMachine.setMovementTileGroup(movementTileGroup);
     }
 
     private void createBackground() {
@@ -178,7 +178,7 @@ public class BoardScreen implements Screen {
         return stateMachine;
     }
 
-    public MovementTiles getMovementTiles() {
-        return movementTiles;
+    public MovementTileGroup getMovementTileGroup() {
+        return movementTileGroup;
     }
 }

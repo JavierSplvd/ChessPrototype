@@ -7,7 +7,7 @@ public class ResourceManager {
 
     public final AssetManager assetManager = new AssetManager();
 
-    //    Textures
+    //    Textures path
     private final String greenTile = "GreenTile.png";
     private final String grayTile = "GreyTile.png";
     private final String boardBackground = "BoardBackground.png";

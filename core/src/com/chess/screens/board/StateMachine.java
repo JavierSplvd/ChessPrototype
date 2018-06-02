@@ -1,7 +1,7 @@
 package com.chess.screens.board;
 
 import com.chess.Chess;
-import com.chess.screens.board.actors.MovementTileGroup;
+import com.chess.screens.board.actors.MovementSystem;
 import com.chess.screens.board.actors.pieces.Piece;
 
 public class StateMachine {
@@ -14,7 +14,7 @@ public class StateMachine {
 
     private Piece pieceSelected;
 
-    private MovementTileGroup movementTileGroup;
+    private MovementSystem movementSystem;
 
 
     public enum STATE {
@@ -28,7 +28,7 @@ public class StateMachine {
         ui = new StateMachineUI(this);
     }
 
-    private void nextState() {
+    public void nextState() {
         if (currentState == STATE.CHOOSE) {
             currentState = STATE.MOVE;
         } else if (currentState == STATE.MOVE) {
@@ -51,8 +51,12 @@ public class StateMachine {
         }
     }
 
-    public void setMovementTileGroup(MovementTileGroup movementTileGroup) {
-        this.movementTileGroup = movementTileGroup;
+    public void returnToChooseState() {
+        currentState = STATE.CHOOSE;
+    }
+
+    public void setMovementSystem(MovementSystem movementSystem) {
+        this.movementSystem = movementSystem;
     }
 
     public String getPlayerTurn() {
@@ -72,18 +76,17 @@ public class StateMachine {
             System.out.println("Piece selected");
             this.pieceSelected = piece;
             createMovTiles();
-            nextState();
         }
     }
 
     private void createMovTiles() {
-        movementTileGroup.createNewMovTiles(pieceSelected, this);
+        movementSystem.createNewMovTiles(pieceSelected, this);
     }
 
     public void movePieceTo(int i, int j) {
-        if(currentState == STATE.MOVE){
+        if (currentState == STATE.MOVE) {
             pieceSelected.setBoardPosition(i, j);
-            movementTileGroup.clear();
+            movementSystem.clear();
             nextState();
         }
     }

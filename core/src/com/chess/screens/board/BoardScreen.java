@@ -11,9 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.chess.Chess;
 import com.chess.screens.board.actors.Background;
-import com.chess.screens.board.actors.MovementTileGroup;
+import com.chess.screens.board.actors.MovementSystem;
 import com.chess.screens.board.actors.Tile;
 import com.chess.screens.board.actors.pieces.*;
+
+import java.util.ArrayList;
 
 public class BoardScreen implements Screen {
 
@@ -21,13 +23,13 @@ public class BoardScreen implements Screen {
     private Stage stage;
     private final PieceFactory pieceFactory;
     private StateMachine stateMachine;
-    private MovementTileGroup movementTileGroup;
-    private Group whitePieces;
-    private Group blackPieces;
+    private MovementSystem movementSystem;
+    private ArrayList<Piece> collisionList;
 
     public BoardScreen(Chess chess) {
         chess.resourceManager.loadBoardResources();
         this.chess = chess;
+        collisionList = new ArrayList<Piece>();
         pieceFactory = new PieceFactory(this, chess.resourceManager);
         stateMachine = new StateMachine();
         createStage();
@@ -52,9 +54,9 @@ public class BoardScreen implements Screen {
     }
 
     private void initializeMovementTiles() {
-        movementTileGroup = new MovementTileGroup(chess.resourceManager.getMovementTileTexture());
-        stage.addActor(movementTileGroup.getGroup());
-        stateMachine.setMovementTileGroup(movementTileGroup);
+        movementSystem = new MovementSystem(chess.resourceManager.getMovementTileTexture(), this);
+        stage.addActor(movementSystem.getGroup());
+        stateMachine.setMovementSystem(movementSystem);
     }
 
     private void createBackground() {
@@ -75,9 +77,10 @@ public class BoardScreen implements Screen {
     }
 
     private void createWhitePieces() {
-        whitePieces = new Group();
+        Group whitePieces = new Group();
         for (int p = 0; p < 8; p++) {
             Pawn pawn = pieceFactory.createPawn(Chess.PLAYER.WHITES, p, 1);
+            collisionList.add(pawn);
             whitePieces.addActor(pawn);
         }
         King king = pieceFactory.createKing(Chess.PLAYER.WHITES);
@@ -88,6 +91,14 @@ public class BoardScreen implements Screen {
         Knight knight2 = pieceFactory.createKnight(Chess.PLAYER.WHITES, 6, 0);
         Rook rook1 = pieceFactory.createRook(Chess.PLAYER.WHITES, 0, 0);
         Rook rook2 = pieceFactory.createRook(Chess.PLAYER.WHITES, 7, 0);
+        collisionList.add(king);
+        collisionList.add(queen);
+        collisionList.add(bishop1);
+        collisionList.add(bishop2);
+        collisionList.add(knight1);
+        collisionList.add(knight2);
+        collisionList.add(rook1);
+        collisionList.add(rook2);
         whitePieces.addActor(king);
         whitePieces.addActor(queen);
         whitePieces.addActor(bishop1);
@@ -102,9 +113,10 @@ public class BoardScreen implements Screen {
     }
 
     private void createBlackPieces() {
-        blackPieces = new Group();
+        Group blackPieces = new Group();
         for (int p = 0; p < 8; p++) {
             Pawn pawn = pieceFactory.createPawn(Chess.PLAYER.BLACKS, p, 6);
+            collisionList.add(pawn);
             blackPieces.addActor(pawn);
         }
         King king = pieceFactory.createKing(Chess.PLAYER.BLACKS);
@@ -115,6 +127,14 @@ public class BoardScreen implements Screen {
         Knight knight2 = pieceFactory.createKnight(Chess.PLAYER.BLACKS, 6, 7);
         Rook rook1 = pieceFactory.createRook(Chess.PLAYER.BLACKS, 0, 7);
         Rook rook2 = pieceFactory.createRook(Chess.PLAYER.BLACKS, 7, 7);
+        collisionList.add(king);
+        collisionList.add(queen);
+        collisionList.add(bishop1);
+        collisionList.add(bishop2);
+        collisionList.add(knight1);
+        collisionList.add(knight2);
+        collisionList.add(rook1);
+        collisionList.add(rook2);
         blackPieces.addActor(king);
         blackPieces.addActor(queen);
         blackPieces.addActor(bishop1);
@@ -180,7 +200,17 @@ public class BoardScreen implements Screen {
         return stateMachine;
     }
 
-    public MovementTileGroup getMovementTileGroup() {
-        return movementTileGroup;
+    public MovementSystem getMovementSystem() {
+        return movementSystem;
+    }
+
+    // Check whether is something at i,j position or not.
+    public boolean checkBoardPosition(int i, int j) {
+        for (Piece piece : collisionList) {
+            if (i == piece.getxBoardCoord() && j == piece.getyBoardCoord()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

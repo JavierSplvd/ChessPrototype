@@ -19,7 +19,6 @@ public class StateMachine {
 
     public enum STATE {
         CHOOSE, MOVE;
-
     }
 
     public StateMachine() {

@@ -42,6 +42,18 @@ public class Piece extends Actor {
         stateMachine.selectPiece(this);
     }
 
+    public int[][] createBehaviourMap(int[][] collisionMap){
+        int columns = 8;
+        int rows = 8;
+        int[][] behaviourMap = new int[columns][rows];
+        for (int x = 0; x < columns; x++) {
+            for (int y = 0; y < rows; y++) {
+                behaviourMap[x][y] = 1;
+            }
+        }
+        return behaviourMap;
+    }
+
     public Chess.PLAYER getPlayer() {
         return player;
     }

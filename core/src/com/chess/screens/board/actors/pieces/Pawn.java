@@ -1,7 +1,6 @@
 package com.chess.screens.board.actors.pieces;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.chess.Chess;
 import com.chess.screens.board.StateMachine;
 
@@ -13,13 +12,6 @@ public class Pawn extends Piece {
         super(texture, player, stateMachine);
         setBoardPosition(i, j);
         twoStepOption = true;
-    }
-
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        float bottomLeftX = xCenterPosition - width / 2;
-        float bottomLeftY = yCenterPosition - height / 2;
-        batch.draw(texture, bottomLeftX, bottomLeftY, width, height);
     }
 
     @Override

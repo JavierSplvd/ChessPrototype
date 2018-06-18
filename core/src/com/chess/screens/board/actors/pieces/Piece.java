@@ -1,6 +1,7 @@
 package com.chess.screens.board.actors.pieces;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -13,6 +14,8 @@ public class Piece extends Actor {
     Texture texture;
     int xBoardCoord;
     int yBoardCoord;
+    float xCoordTemp;
+    float yCoordTemp;
     float xCenterPosition;
     float yCenterPosition;
     float width = ChessGaphics.TILE_WIDTH;
@@ -38,6 +41,20 @@ public class Piece extends Actor {
         });
     }
 
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        xCoordTemp = xCoordTemp + 0.1f * (xBottomLeft - xCoordTemp);
+        yCoordTemp = yCoordTemp + 0.1f * (yBottomLeft - yCoordTemp);
+        setX(xCoordTemp);
+        setY(yCoordTemp);
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        batch.draw(texture, xCoordTemp, yCoordTemp, width, height);
+    }
+
     public void setBoardPosition(int i, int j) {
         xBoardCoord = i;
         yBoardCoord = j;
@@ -45,11 +62,10 @@ public class Piece extends Actor {
         yCenterPosition = ChessGaphics.BOARD_Y_OFFSET + (j + 1 / 2f) * height;
         xBottomLeft = xCenterPosition - width / 2;
         yBottomLeft = yCenterPosition - height / 2;
-        setX(xBottomLeft);
-        setY(yBottomLeft);
+
     }
 
-    void chooseThisPiece() {
+    private void chooseThisPiece() {
         stateMachine.clicked(this);
     }
 

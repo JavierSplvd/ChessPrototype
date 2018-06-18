@@ -2,6 +2,8 @@ package com.chess.screens.board.actors.pieces;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.chess.Chess;
 import com.chess.ChessGaphics;
 import com.chess.screens.board.StateMachine;
@@ -25,6 +27,14 @@ public class Piece extends Actor {
         this.player = player;
         this.stateMachine = stateMachine;
         setSize(width, height);
+        addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println("Piece: touch down");
+                chooseThisPiece();
+                return true;
+            }
+        });
     }
 
     public void setBoardPosition(int i, int j) {
@@ -42,7 +52,7 @@ public class Piece extends Actor {
         stateMachine.selectPiece(this);
     }
 
-    public int[][] createBehaviourMap(int[][] collisionMap){
+    public int[][] createBehaviourMap(int[][] collisionMap) {
         int columns = 8;
         int rows = 8;
         int[][] behaviourMap = new int[columns][rows];

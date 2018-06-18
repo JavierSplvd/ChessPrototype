@@ -48,6 +48,7 @@ public class StateMachine {
         } else if (playerTurn == Chess.PLAYER.BLACKS) {
             playerTurn = Chess.PLAYER.WHITES;
         }
+        pieceSelected = null;
     }
 
     public void returnToChooseState() {
@@ -72,7 +73,7 @@ public class StateMachine {
 
     public void selectPiece(Piece piece) {
         if (currentState == STATE.CHOOSE && piece.getPlayer() == playerTurn) {
-            System.out.println("Piece selected");
+            System.out.println("State Machine: Piece selected");
             this.pieceSelected = piece;
             createMovTiles();
         }

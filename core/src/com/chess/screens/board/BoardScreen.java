@@ -45,12 +45,6 @@ public class BoardScreen implements Screen {
         StretchViewport viewport = new StretchViewport(960, 540);
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
-        stage.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Clicked stage");
-            }
-        });
     }
 
     private void initializeMovementTiles() {

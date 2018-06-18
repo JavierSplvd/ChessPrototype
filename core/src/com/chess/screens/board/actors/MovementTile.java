@@ -5,10 +5,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.chess.screens.board.StateMachine;
 
-public class MovementDot extends Tile {
+public class MovementTile extends Tile {
 
 
-    public MovementDot(Texture texture, final StateMachine stateMachine) {
+    public MovementTile(Texture texture, final StateMachine stateMachine) {
         super(texture, stateMachine);
         addListener(new InputListener() {
             @Override

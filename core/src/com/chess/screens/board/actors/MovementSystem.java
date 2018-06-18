@@ -29,7 +29,7 @@ public class MovementSystem {
         for (int x = 0; x < columns; x++) {
             for (int y = 0; y < rows; y++) {
                 if (behaviourMap[x][y] == 2) {
-                    Tile tile = new MovementDot(movementTileTex, stateMachine);
+                    Tile tile = new MovementTile(movementTileTex, stateMachine);
                     tile.setBoardPosition(x, y);
                     movTilesActors.addActor(tile);
                     numberMovementPositions++;
@@ -55,7 +55,7 @@ public class MovementSystem {
         }
         // Check collisions
         if (!boardScreen.checkBoardPosition(x, yCoord)) {
-            Tile tile = new MovementDot(movementTileTex, stateMachine);
+            Tile tile = new MovementTile(movementTileTex, stateMachine);
             tile.setBoardPosition(x, yCoord);
             movTilesActors.addActor(tile);
             stateMachine.nextState();

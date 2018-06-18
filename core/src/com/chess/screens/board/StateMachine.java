@@ -1,7 +1,7 @@
 package com.chess.screens.board;
 
 import com.chess.Chess;
-import com.chess.screens.board.actors.MovementDot;
+import com.chess.screens.board.actors.MovementTile;
 import com.chess.screens.board.actors.MovementSystem;
 import com.chess.screens.board.actors.Tile;
 import com.chess.screens.board.actors.pieces.Piece;
@@ -85,8 +85,8 @@ public class StateMachine {
         }
     }
 
-    public void clicked(MovementDot movementDot){
-        movePieceTo(movementDot.getxBoardCoord(), movementDot.getyBoardCoord());
+    public void clicked(MovementTile movementTile){
+        movePieceTo(movementTile.getxBoardCoord(), movementTile.getyBoardCoord());
     }
 
     public void clicked(Tile tile){

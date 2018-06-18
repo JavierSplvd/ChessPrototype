@@ -7,18 +7,20 @@ import com.chess.screens.board.StateMachine;
 
 public class MovementDot extends Tile {
 
-    private StateMachine stateMachine;
 
     public MovementDot(Texture texture, final StateMachine stateMachine) {
-        super(texture);
-        this.stateMachine = stateMachine;
+        super(texture, stateMachine);
         addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("Clicked movement dot.");
-                stateMachine.movePieceTo(getxBoardCoord(), getyBoardCoord());
+                System.out.println("Movement Dot: touch down");
+                clickedThis();
+                event.stop();
                 return true;
             }
         });
+    }
+    private void clickedThis(){
+        stateMachine.clicked(this);
     }
 }

@@ -3,12 +3,16 @@ package com.chess.screens.board.actors;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.chess.ChessGaphics;
+import com.chess.screens.board.StateMachine;
 
 import java.util.Random;
 
 public class Tile extends Actor {
 
+    StateMachine stateMachine;
     private Texture texture;
     private int xBoardCoord;
     private int yBoardCoord;
@@ -21,11 +25,16 @@ public class Tile extends Actor {
     private float xBottomLeft;
     private float yBottomLeft;
 
-    public Tile(Texture texture) {
+    public Tile(Texture texture, final StateMachine stateMachine) {
         this.texture = texture;
+        this.stateMachine = stateMachine;
         alpha = 0.8f + r.nextFloat() * 0.2f;
         alpha = 1;
         setSize(width, height);
+    }
+
+    private void clickedThisTile(){
+        stateMachine.clicked(this);
     }
 
     public void setBoardPosition(int i, int j) {

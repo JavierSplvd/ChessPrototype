@@ -1,7 +1,9 @@
 package com.chess.screens.board;
 
 import com.chess.Chess;
+import com.chess.screens.board.actors.MovementDot;
 import com.chess.screens.board.actors.MovementSystem;
+import com.chess.screens.board.actors.Tile;
 import com.chess.screens.board.actors.pieces.Piece;
 
 public class StateMachine {
@@ -53,6 +55,8 @@ public class StateMachine {
 
     public void returnToChooseState() {
         currentState = STATE.CHOOSE;
+        movementSystem.clear();
+        updateUI();
     }
 
     public void setMovementSystem(MovementSystem movementSystem) {
@@ -71,12 +75,22 @@ public class StateMachine {
         return String.valueOf(turnCount);
     }
 
-    public void selectPiece(Piece piece) {
+    public void clicked(Piece piece) {
         if (currentState == STATE.CHOOSE && piece.getPlayer() == playerTurn) {
             System.out.println("State Machine: Piece selected");
             this.pieceSelected = piece;
             createMovTiles();
+        } else{
+            returnToChooseState();
         }
+    }
+
+    public void clicked(MovementDot movementDot){
+        movePieceTo(movementDot.getxBoardCoord(), movementDot.getyBoardCoord());
+    }
+
+    public void clicked(Tile tile){
+        returnToChooseState();
     }
 
     private void createMovTiles() {

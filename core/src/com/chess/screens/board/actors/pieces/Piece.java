@@ -32,6 +32,7 @@ public class Piece extends Actor {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("Piece: touch down");
                 chooseThisPiece();
+                event.stop();
                 return true;
             }
         });
@@ -49,7 +50,7 @@ public class Piece extends Actor {
     }
 
     void chooseThisPiece() {
-        stateMachine.selectPiece(this);
+        stateMachine.clicked(this);
     }
 
     public int[][] createBehaviourMap(int[][] collisionMap) {

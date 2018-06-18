@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.chess.Chess;
 import com.chess.screens.board.actors.Background;
@@ -35,10 +35,18 @@ public class BoardScreen implements Screen {
         createStage();
         createBackground();
         createTiles();
+        initializeMovementTiles();
         createWhitePieces();
         createBlackPieces();
-        initializeMovementTiles();
         stage.addActor(stateMachine.ui.getUI());
+        stage.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println("Stage: touch down");
+                stateMachine.returnToChooseState();
+                return true;
+            }
+        });
     }
 
     private void createStage() {
@@ -62,7 +70,7 @@ public class BoardScreen implements Screen {
         Group boardTiles = new Group();
         for (int column = 0; column < 8; column++) {
             for (int row = 0; row < 8; row++) {
-                Tile tile = new Tile(getTextureGivenIndexes(column, row));
+                Tile tile = new Tile(getTextureGivenIndexes(column, row), stateMachine);
                 tile.setBoardPosition(column, row);
                 boardTiles.addActor(tile);
             }

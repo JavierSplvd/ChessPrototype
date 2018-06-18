@@ -7,9 +7,12 @@ import com.chess.screens.board.StateMachine;
 
 public class Pawn extends Piece {
 
+    private boolean twoStepOption;
+
     public Pawn(Chess.PLAYER player, Texture texture, int i, int j, StateMachine stateMachine) {
         super(texture, player, stateMachine);
         setBoardPosition(i, j);
+        twoStepOption = true;
     }
 
     @Override
@@ -22,16 +25,28 @@ public class Pawn extends Piece {
     @Override
     public int[][] createBehaviourMap(int[][] collisionMap) {
         int x = getxBoardCoord();
-        int y = getyBoardCoord();
+        int y;
         int[][] behaviourMap = collisionMap.clone();
 
         if (getPlayer() == Chess.PLAYER.WHITES) {
-            y = y + 1;
+            y = getyBoardCoord() + 1;
         } else {
-            y = y - 1;
+            y = getyBoardCoord() - 1;
         }
 
-        if (collisionMap[x][y] == 0){
+        if (collisionMap[x][y] == 0) {
+            behaviourMap[x][y] = 2;
+        }
+
+        if (getPlayer() == Chess.PLAYER.WHITES && twoStepOption) {
+            y = getyBoardCoord() + 2;
+            twoStepOption = false;
+        } else if (getPlayer() == Chess.PLAYER.BLACKS && twoStepOption) {
+            y = getyBoardCoord() - 2;
+            twoStepOption = false;
+        }
+
+        if (collisionMap[x][y] == 0) {
             behaviourMap[x][y] = 2;
         }
         return behaviourMap;

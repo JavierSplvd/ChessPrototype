@@ -80,8 +80,10 @@ public class StateMachine {
             System.out.println("State Machine: Piece selected");
             this.pieceSelected = piece;
             createMovTiles();
+            SoundSystem.play(SoundSystem.SOUND_KEYS.CLICK);
         } else{
             returnToChooseState();
+            SoundSystem.play(SoundSystem.SOUND_KEYS.REJECT_CLICK);
         }
     }
 

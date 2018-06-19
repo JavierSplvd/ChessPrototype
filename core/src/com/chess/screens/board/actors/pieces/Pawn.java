@@ -6,12 +6,10 @@ import com.chess.screens.board.StateMachine;
 
 public class Pawn extends Piece {
 
-    private boolean twoStepOption;
 
     public Pawn(Chess.PLAYER player, Texture texture, int i, int j, StateMachine stateMachine) {
         super(texture, player, stateMachine);
         setBoardPosition(i, j);
-        twoStepOption = true;
     }
 
     @Override
@@ -30,12 +28,10 @@ public class Pawn extends Piece {
             behaviourMap[x][y] = 2;
         }
 
-        if (getPlayer() == Chess.PLAYER.WHITES && twoStepOption) {
+        if (getPlayer() == Chess.PLAYER.WHITES && !moved) {
             y = getyBoardCoord() + 2;
-            twoStepOption = false;
-        } else if (getPlayer() == Chess.PLAYER.BLACKS && twoStepOption) {
+        } else if (getPlayer() == Chess.PLAYER.BLACKS && !moved) {
             y = getyBoardCoord() - 2;
-            twoStepOption = false;
         }
 
         if (collisionMap[x][y] == 0) {

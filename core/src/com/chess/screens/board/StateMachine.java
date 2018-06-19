@@ -101,7 +101,7 @@ public class StateMachine {
 
     public void movePieceTo(int i, int j) {
         if (currentState == STATE.MOVE) {
-            pieceSelected.setBoardPosition(i, j);
+            pieceSelected.changeBoardPosition(i, j);
             movementSystem.clear();
             nextState();
         }

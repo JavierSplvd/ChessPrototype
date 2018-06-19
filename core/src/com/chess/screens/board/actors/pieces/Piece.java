@@ -20,6 +20,7 @@ public class Piece extends Actor {
     float yCenterPosition;
     float width = ChessGaphics.TILE_WIDTH;
     float height = ChessGaphics.TILE_HEIGHT;
+    boolean moved = false;
     private float yBottomLeft;
     private float xBottomLeft;
     private Chess.PLAYER player;
@@ -55,14 +56,13 @@ public class Piece extends Actor {
         batch.draw(texture, xCoordTemp, yCoordTemp, width, height);
     }
 
-    public void setBoardPosition(int i, int j) {
+    void setBoardPosition(int i, int j) {
         xBoardCoord = i;
         yBoardCoord = j;
         xCenterPosition = ChessGaphics.BOARD_X_OFFSET + (i + 1 / 2f) * width;
         yCenterPosition = ChessGaphics.BOARD_Y_OFFSET + (j + 1 / 2f) * height;
         xBottomLeft = xCenterPosition - width / 2;
         yBottomLeft = yCenterPosition - height / 2;
-
     }
 
     private void chooseThisPiece() {
@@ -91,5 +91,10 @@ public class Piece extends Actor {
 
     public int getyBoardCoord() {
         return yBoardCoord;
+    }
+
+    public void changeBoardPosition(int i, int j) {
+        setBoardPosition(i,j);
+        moved = true;
     }
 }

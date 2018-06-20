@@ -45,8 +45,8 @@ public class Piece extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
-        xCoordTemp = xCoordTemp + 0.1f * (xBottomLeft - xCoordTemp);
-        yCoordTemp = yCoordTemp + 0.1f * (yBottomLeft - yCoordTemp);
+        xCoordTemp = xCoordTemp + 0.2f * (xBottomLeft - xCoordTemp);
+        yCoordTemp = yCoordTemp + 0.2f * (yBottomLeft - yCoordTemp);
         setX(xCoordTemp);
         setY(yCoordTemp);
     }
@@ -69,18 +69,6 @@ public class Piece extends Actor {
         stateMachine.clicked(this);
     }
 
-    public int[][] createBehaviourMap(int[][] collisionMap) {
-        int columns = 8;
-        int rows = 8;
-        int[][] behaviourMap = new int[columns][rows];
-        for (int x = 0; x < columns; x++) {
-            for (int y = 0; y < rows; y++) {
-                behaviourMap[x][y] = 1;
-            }
-        }
-        return behaviourMap;
-    }
-
     public Chess.PLAYER getPlayer() {
         return player;
     }
@@ -94,7 +82,11 @@ public class Piece extends Actor {
     }
 
     public void changeBoardPosition(int i, int j) {
-        setBoardPosition(i,j);
+        setBoardPosition(i, j);
         moved = true;
+    }
+
+    public boolean isMoved() {
+        return moved;
     }
 }

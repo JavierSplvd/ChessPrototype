@@ -1,13 +1,17 @@
 package com.chess.screens.board;
 
 import com.chess.Chess;
+import com.chess.screens.board.actors.AttackTile;
 import com.chess.screens.board.actors.MovementTile;
 import com.chess.screens.board.actors.MovementSystem;
 import com.chess.screens.board.actors.Tile;
 import com.chess.screens.board.actors.pieces.Piece;
 
+import java.util.ArrayList;
+
 public class StateMachine {
 
+    private ArrayList<Piece> pieceList;
     private Chess.PLAYER playerTurn;
 
     private int turnCount = 0;
@@ -15,15 +19,18 @@ public class StateMachine {
     StateMachineUI ui;
 
     private Piece pieceSelected;
+    private Piece targetPiece;
 
     private MovementSystem movementSystem;
 
 
     public enum STATE {
         CHOOSE, MOVE;
+
     }
 
-    public StateMachine() {
+    public StateMachine(ArrayList<Piece> pieceList) {
+        this.pieceList = pieceList;
         playerTurn = Chess.PLAYER.WHITES;
         currentState = STATE.CHOOSE;
         ui = new StateMachineUI(this);
@@ -67,6 +74,10 @@ public class StateMachine {
         return playerTurn.toString();
     }
 
+    public STATE getState(){
+        return currentState;
+    }
+
     public String getCurrentState() {
         return currentState.toString();
     }
@@ -81,17 +92,17 @@ public class StateMachine {
             this.pieceSelected = piece;
             createMovTiles();
             SoundSystem.play(SoundSystem.SOUND_KEYS.CLICK);
-        } else{
+        } else {
             returnToChooseState();
             SoundSystem.play(SoundSystem.SOUND_KEYS.REJECT_CLICK);
         }
     }
 
-    public void clicked(MovementTile movementTile){
+    public void clicked(MovementTile movementTile) {
         movePieceTo(movementTile.getxBoardCoord(), movementTile.getyBoardCoord());
     }
 
-    public void clicked(Tile tile){
+    public void clicked(Tile tile) {
         returnToChooseState();
     }
 
@@ -105,5 +116,15 @@ public class StateMachine {
             movementSystem.clear();
             nextState();
         }
+    }
+
+    public void clickedAttack(AttackTile attackTile) {
+        System.out.println("Attack");
+        targetPiece = attackTile.getTargetPiece();
+        pieceList.remove(targetPiece);
+        targetPiece.remove();
+        movePieceTo(attackTile.getxBoardCoord(), attackTile.getyBoardCoord());
+        movementSystem.clear();
+        SoundSystem.play(SoundSystem.SOUND_KEYS.ATTACK);
     }
 }

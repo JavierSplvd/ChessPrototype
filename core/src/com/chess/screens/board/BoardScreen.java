@@ -24,27 +24,30 @@ public class BoardScreen implements Screen {
     private final PieceFactory pieceFactory;
     private StateMachine stateMachine;
     private MovementSystem movementSystem;
-    private ArrayList<Piece> collisionList;
+    private ArrayList<Piece> pieceList;
 
     public BoardScreen(Chess chess) {
         chess.resourceManager.loadBoardResources();
         this.chess = chess;
-        collisionList = new ArrayList<Piece>();
+        pieceList = new ArrayList<Piece>();
         pieceFactory = new PieceFactory(this, chess.resourceManager);
-        stateMachine = new StateMachine();
+        stateMachine = new StateMachine(pieceList);
         createStage();
         createBackground();
         createTiles();
-        initializeMovementTiles();
         createWhitePieces();
         createBlackPieces();
         stage.addActor(stateMachine.ui.getUI());
+        initializeMovementTiles();
         stage.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("Stage: touch down");
-                stateMachine.returnToChooseState();
-                return true;
+                if(stateMachine.getState() == StateMachine.STATE.MOVE){
+                    stateMachine.returnToChooseState();
+                    return true;
+                }
+                return false;
             }
         });
     }
@@ -56,7 +59,7 @@ public class BoardScreen implements Screen {
     }
 
     private void initializeMovementTiles() {
-        movementSystem = new MovementSystem(chess.resourceManager.getMovementTileTexture(), this);
+        movementSystem = new MovementSystem(chess.resourceManager.getMovementTileTexture(),chess.resourceManager.getAttackTileTexture(), this);
         stage.addActor(movementSystem.getGroup());
         stateMachine.setMovementSystem(movementSystem);
     }
@@ -82,7 +85,7 @@ public class BoardScreen implements Screen {
         Group whitePieces = new Group();
         for (int p = 0; p < 8; p++) {
             Pawn pawn = pieceFactory.createPawn(Chess.PLAYER.WHITES, p, 1);
-            collisionList.add(pawn);
+            pieceList.add(pawn);
             whitePieces.addActor(pawn);
         }
         King king = pieceFactory.createKing(Chess.PLAYER.WHITES);
@@ -93,14 +96,14 @@ public class BoardScreen implements Screen {
         Knight knight2 = pieceFactory.createKnight(Chess.PLAYER.WHITES, 6, 0);
         Rook rook1 = pieceFactory.createRook(Chess.PLAYER.WHITES, 0, 0);
         Rook rook2 = pieceFactory.createRook(Chess.PLAYER.WHITES, 7, 0);
-        collisionList.add(king);
-        collisionList.add(queen);
-        collisionList.add(bishop1);
-        collisionList.add(bishop2);
-        collisionList.add(knight1);
-        collisionList.add(knight2);
-        collisionList.add(rook1);
-        collisionList.add(rook2);
+        pieceList.add(king);
+        pieceList.add(queen);
+        pieceList.add(bishop1);
+        pieceList.add(bishop2);
+        pieceList.add(knight1);
+        pieceList.add(knight2);
+        pieceList.add(rook1);
+        pieceList.add(rook2);
         whitePieces.addActor(king);
         whitePieces.addActor(queen);
         whitePieces.addActor(bishop1);
@@ -118,7 +121,7 @@ public class BoardScreen implements Screen {
         Group blackPieces = new Group();
         for (int p = 0; p < 8; p++) {
             Pawn pawn = pieceFactory.createPawn(Chess.PLAYER.BLACKS, p, 6);
-            collisionList.add(pawn);
+            pieceList.add(pawn);
             blackPieces.addActor(pawn);
         }
         King king = pieceFactory.createKing(Chess.PLAYER.BLACKS);
@@ -129,14 +132,14 @@ public class BoardScreen implements Screen {
         Knight knight2 = pieceFactory.createKnight(Chess.PLAYER.BLACKS, 6, 7);
         Rook rook1 = pieceFactory.createRook(Chess.PLAYER.BLACKS, 0, 7);
         Rook rook2 = pieceFactory.createRook(Chess.PLAYER.BLACKS, 7, 7);
-        collisionList.add(king);
-        collisionList.add(queen);
-        collisionList.add(bishop1);
-        collisionList.add(bishop2);
-        collisionList.add(knight1);
-        collisionList.add(knight2);
-        collisionList.add(rook1);
-        collisionList.add(rook2);
+        pieceList.add(king);
+        pieceList.add(queen);
+        pieceList.add(bishop1);
+        pieceList.add(bishop2);
+        pieceList.add(knight1);
+        pieceList.add(knight2);
+        pieceList.add(rook1);
+        pieceList.add(rook2);
         blackPieces.addActor(king);
         blackPieces.addActor(queen);
         blackPieces.addActor(bishop1);
@@ -202,17 +205,33 @@ public class BoardScreen implements Screen {
         return stateMachine;
     }
 
-    public MovementSystem getMovementSystem() {
-        return movementSystem;
-    }
-
     // Check whether is something at i,j position or not.
     public boolean checkBoardPosition(int i, int j) {
-        for (Piece piece : collisionList) {
+        for (Piece piece : pieceList) {
             if (i == piece.getxBoardCoord() && j == piece.getyBoardCoord()) {
                 return true;
             }
         }
         return false;
+    }
+    // Check if the piece at i,j is white
+    public boolean checkIfItIsWhite(int i, int j) {
+        for (Piece piece : pieceList) {
+            if (i == piece.getxBoardCoord() && j == piece.getyBoardCoord()) {
+                if(piece.getPlayer() == Chess.PLAYER.WHITES){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public Piece getPieceIn(int i, int j) {
+        for (Piece piece : pieceList) {
+            if (i == piece.getxBoardCoord() && j == piece.getyBoardCoord()) {
+                return piece;
+            }
+        }
+        return null;
     }
 }

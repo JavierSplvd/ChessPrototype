@@ -4,16 +4,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.chess.screens.board.StateMachine;
+import com.chess.screens.board.actors.pieces.Piece;
 
-public class MovementTile extends Tile {
+public class AttackTile extends Tile {
 
+    private Piece targetPiece;
 
-    MovementTile(Texture texture, final StateMachine stateMachine) {
+    AttackTile(Texture texture, final StateMachine stateMachine, Piece targetPiece) {
         super(texture, stateMachine);
         addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("Movement Dot: touch down");
+                System.out.println("Attack Tile: touch down");
                 if(stateMachine.getState() == StateMachine.STATE.MOVE){
                     clickedThis();
                     event.stop();
@@ -22,8 +24,14 @@ public class MovementTile extends Tile {
                 return false;
             }
         });
+        this.targetPiece = targetPiece;
     }
-    private void clickedThis(){
-        stateMachine.clicked(this);
+
+    private void clickedThis() {
+        stateMachine.clickedAttack(this);
+    }
+
+    public Piece getTargetPiece() {
+        return targetPiece;
     }
 }

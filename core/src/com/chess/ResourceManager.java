@@ -10,6 +10,7 @@ public class ResourceManager {
     //    Textures path
     private final String greenTile = "GreenTile.png";
     private final String grayTile = "GreyTile.png";
+    private final String redTile = "RedTile.png";
     private final String boardBackground = "BoardBackground.png";
     private final String blueTile = "BlueTile.png";
 
@@ -49,6 +50,7 @@ public class ResourceManager {
         assetManager.load(greenTile, Texture.class);
         assetManager.load(grayTile, Texture.class);
         assetManager.load(blueTile, Texture.class);
+        assetManager.load(redTile, Texture.class);
     }
 
 
@@ -124,5 +126,9 @@ public class ResourceManager {
 
     public Texture getMovementTileTexture() {
         return assetManager.get(blueTile);
+    }
+
+    public Texture getAttackTileTexture() {
+        return assetManager.get(redTile);
     }
 }

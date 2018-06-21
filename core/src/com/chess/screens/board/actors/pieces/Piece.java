@@ -26,7 +26,7 @@ public class Piece extends Actor {
     private Chess.PLAYER player;
     private StateMachine stateMachine;
 
-    public Piece(Texture texture, Chess.PLAYER player, StateMachine stateMachine) {
+    public Piece(Texture texture, Chess.PLAYER player, final StateMachine stateMachine) {
         this.texture = texture;
         this.player = player;
         this.stateMachine = stateMachine;
@@ -35,9 +35,12 @@ public class Piece extends Actor {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("Piece: touch down");
-                chooseThisPiece();
-                event.stop();
-                return true;
+                if (stateMachine.getState() == StateMachine.STATE.CHOOSE) {
+                    chooseThisPiece();
+                    event.stop();
+                    return true;
+                }
+                return false;
             }
         });
     }

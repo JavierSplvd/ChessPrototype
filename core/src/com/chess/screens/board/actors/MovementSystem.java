@@ -9,18 +9,21 @@ import com.chess.screens.board.actors.pieces.*;
 
 public class MovementSystem {
 
+
     public enum TILE_STATUS {
-        FREE, OCCUPIED, MOVE, ATTACK
+        FREE, WHITE, BLACK, MOVE, ATTACK;
     }
 
     private final Texture movementTileTex;
+    private Texture attackTileTex;
     private Group movTilesActors;
     private BoardScreen boardScreen;
 
 
-    public MovementSystem(Texture texture, BoardScreen boardScreen) {
+    public MovementSystem(Texture movementTexture, Texture attackTexture, BoardScreen boardScreen) {
         movTilesActors = new Group();
-        this.movementTileTex = texture;
+        this.movementTileTex = movementTexture;
+        this.attackTileTex = attackTexture;
         this.boardScreen = boardScreen;
     }
 
@@ -31,42 +34,27 @@ public class MovementSystem {
 
         int columns = 8;
         int rows = 8;
-        int numberMovementPositions = 0;
+        int numberMoves = 0;
         for (int x = 0; x < columns; x++) {
             for (int y = 0; y < rows; y++) {
                 if (behaviourMap[x][y] == TILE_STATUS.MOVE) {
                     Tile tile = new MovementTile(movementTileTex, stateMachine);
                     tile.setBoardPosition(x, y);
                     movTilesActors.addActor(tile);
-                    numberMovementPositions++;
+                    numberMoves++;
+                }
+                if (behaviourMap[x][y] == TILE_STATUS.ATTACK) {
+                    Tile tile = new AttackTile(attackTileTex, stateMachine, boardScreen.getPieceIn(x, y));
+                    tile.setBoardPosition(x, y);
+                    movTilesActors.addActor(tile);
+                    numberMoves++;
                 }
             }
         }
-        if (numberMovementPositions == 0) {
+        if (numberMoves == 0) {
             stateMachine.returnToChooseState();
         } else {
             stateMachine.nextState();
-        }
-    }
-
-    private void behaviourFor(Piece piece, StateMachine stateMachine) {
-        int x = piece.getxBoardCoord();
-        int y = piece.getyBoardCoord();
-        System.out.println(piece.getClass().toString());
-        int yCoord;
-        if (piece.getPlayer() == Chess.PLAYER.WHITES) {
-            yCoord = y + 1;
-        } else {
-            yCoord = y - 1;
-        }
-        // Check collisions
-        if (!boardScreen.checkBoardPosition(x, yCoord)) {
-            Tile tile = new MovementTile(movementTileTex, stateMachine);
-            tile.setBoardPosition(x, yCoord);
-            movTilesActors.addActor(tile);
-            stateMachine.nextState();
-        } else {
-            stateMachine.returnToChooseState();
         }
     }
 
@@ -78,7 +66,12 @@ public class MovementSystem {
             for (int y = 0; y < rows; y++) {
                 boolean exist = boardScreen.checkBoardPosition(x, y);
                 if (exist) {
-                    collisionMap[x][y] = TILE_STATUS.OCCUPIED;
+                    boolean isWhite = boardScreen.checkIfItIsWhite(x, y);
+                    if (isWhite) {
+                        collisionMap[x][y] = TILE_STATUS.WHITE;
+                    } else {
+                        collisionMap[x][y] = TILE_STATUS.BLACK;
+                    }
                 } else {
                     collisionMap[x][y] = TILE_STATUS.FREE;
                 }
@@ -95,11 +88,13 @@ public class MovementSystem {
         movTilesActors.clearChildren();
     }
 
-    private TILE_STATUS classify(TILE_STATUS[][] collisionMap, int i, int j) {
+    private TILE_STATUS classify(TILE_STATUS[][] collisionMap, int i, int j, Piece piece) {
         if (i < 8 && i >= 0 && j < 8 && j >= 0) {
             if (collisionMap[i][j] == TILE_STATUS.FREE) {
                 return TILE_STATUS.MOVE;
-            } else if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+            } else if (collisionMap[i][j] == TILE_STATUS.WHITE && piece.getPlayer() == Chess.PLAYER.BLACKS) {
+                return TILE_STATUS.ATTACK;
+            } else if (collisionMap[i][j] == TILE_STATUS.BLACK && piece.getPlayer() == Chess.PLAYER.WHITES) {
                 return TILE_STATUS.ATTACK;
             }
         }
@@ -112,6 +107,7 @@ public class MovementSystem {
         TILE_STATUS[][] behaviourMap = createCollisionMap();
 
         if (piece instanceof Pawn) {
+            // Movement pattern
             if (piece.getPlayer() == Chess.PLAYER.WHITES) {
                 y = piece.getyBoardCoord() + 1;
             } else {
@@ -131,6 +127,39 @@ public class MovementSystem {
             if (collisionMap[x][y] == MovementSystem.TILE_STATUS.FREE) {
                 behaviourMap[x][y] = MovementSystem.TILE_STATUS.MOVE;
             }
+            //Attack pattern
+            //Left
+            if (piece.getPlayer() == Chess.PLAYER.WHITES) {
+                y = piece.getyBoardCoord() + 1;
+                x = piece.getxBoardCoord() - 1;
+            } else {
+                y = piece.getyBoardCoord() - 1;
+                x = piece.getxBoardCoord() - 1;
+            }
+
+            if (x < 8 && y < 8 && x >= 0 && y >= 0) {
+                if (collisionMap[x][y] == TILE_STATUS.BLACK && piece.getPlayer() == Chess.PLAYER.WHITES) {
+                    behaviourMap[x][y] = TILE_STATUS.ATTACK;
+                } else if (collisionMap[x][y] == TILE_STATUS.WHITE && piece.getPlayer() == Chess.PLAYER.BLACKS) {
+                    behaviourMap[x][y] = TILE_STATUS.ATTACK;
+                }
+            }
+            //Right
+            if (piece.getPlayer() == Chess.PLAYER.WHITES) {
+                y = piece.getyBoardCoord() + 1;
+                x = piece.getxBoardCoord() + 1;
+            } else {
+                y = piece.getyBoardCoord() - 1;
+                x = piece.getxBoardCoord() + 1;
+            }
+
+            if (x < 8 && y < 8 && x >= 0 && y >= 0) {
+                if (collisionMap[x][y] == TILE_STATUS.BLACK && piece.getPlayer() == Chess.PLAYER.WHITES) {
+                    behaviourMap[x][y] = TILE_STATUS.ATTACK;
+                } else if (collisionMap[x][y] == TILE_STATUS.WHITE && piece.getPlayer() == Chess.PLAYER.BLACKS) {
+                    behaviourMap[x][y] = TILE_STATUS.ATTACK;
+                }
+            }
             return behaviourMap;
         }
         if (piece instanceof King) {
@@ -138,7 +167,7 @@ public class MovementSystem {
                 int dx = (int) Math.round(Math.cos(Math.toRadians(angle)) * 1 - Math.sin(Math.toRadians(angle)) * 0);
                 int dy = (int) Math.round(Math.sin(Math.toRadians(angle)) * 1 + Math.cos(Math.toRadians(angle)) * 0);
                 if (x + dx < 8 && x + dx >= 0 && y + dy < 8 && y + dy >= 0) {
-                    behaviourMap[x + dx][y + dy] = classify(collisionMap, x + dx, y + dy);
+                    behaviourMap[x + dx][y + dy] = classify(collisionMap, x + dx, y + dy, piece);
                 }
             }
             return behaviourMap;
@@ -148,8 +177,8 @@ public class MovementSystem {
             int i = x + 1;
             int j = y + 1;
             while (i < 8 && j < 8 && i >= 0 && j >= 0) {
-                behaviourMap[i][j] = classify(collisionMap, i, j);
-                if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+                behaviourMap[i][j] = classify(collisionMap, i, j, piece);
+                if (collisionMap[i][j] == TILE_STATUS.WHITE || collisionMap[i][j] == TILE_STATUS.BLACK) {
                     break;
                 }
                 i++;
@@ -159,8 +188,8 @@ public class MovementSystem {
             i = x + 1;
             j = y - 1;
             while (i < 8 && j < 8 && i >= 0 && j >= 0) {
-                behaviourMap[i][j] = classify(collisionMap, i, j);
-                if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+                behaviourMap[i][j] = classify(collisionMap, i, j, piece);
+                if (collisionMap[i][j] == TILE_STATUS.WHITE || collisionMap[i][j] == TILE_STATUS.BLACK) {
                     break;
                 }
                 i++;
@@ -170,8 +199,8 @@ public class MovementSystem {
             i = x - 1;
             j = y + 1;
             while (i < 8 && j < 8 && i >= 0 && j >= 0) {
-                behaviourMap[i][j] = classify(collisionMap, i, j);
-                if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+                behaviourMap[i][j] = classify(collisionMap, i, j, piece);
+                if (collisionMap[i][j] == TILE_STATUS.WHITE || collisionMap[i][j] == TILE_STATUS.BLACK) {
                     break;
                 }
                 i--;
@@ -181,8 +210,8 @@ public class MovementSystem {
             i = x - 1;
             j = y - 1;
             while (i < 8 && j < 8 && i >= 0 && j >= 0) {
-                behaviourMap[i][j] = classify(collisionMap, i, j);
-                if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+                behaviourMap[i][j] = classify(collisionMap, i, j, piece);
+                if (collisionMap[i][j] == TILE_STATUS.WHITE || collisionMap[i][j] == TILE_STATUS.BLACK) {
                     break;
                 }
                 i--;
@@ -192,8 +221,8 @@ public class MovementSystem {
             i = x;
             j = y + 1;
             while (i < 8 && j < 8 && i >= 0 && j >= 0) {
-                behaviourMap[i][j] = classify(collisionMap, i, j);
-                if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+                behaviourMap[i][j] = classify(collisionMap, i, j, piece);
+                if (collisionMap[i][j] == TILE_STATUS.WHITE || collisionMap[i][j] == TILE_STATUS.BLACK) {
                     break;
                 }
                 j++;
@@ -202,8 +231,8 @@ public class MovementSystem {
             i = x;
             j = y - 1;
             while (i < 8 && j < 8 && i >= 0 && j >= 0) {
-                behaviourMap[i][j] = classify(collisionMap, i, j);
-                if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+                behaviourMap[i][j] = classify(collisionMap, i, j, piece);
+                if (collisionMap[i][j] == TILE_STATUS.WHITE || collisionMap[i][j] == TILE_STATUS.BLACK) {
                     break;
                 }
                 j--;
@@ -212,8 +241,8 @@ public class MovementSystem {
             i = x + 1;
             j = y;
             while (i < 8 && j < 8 && i >= 0 && j >= 0) {
-                behaviourMap[i][j] = classify(collisionMap, i, j);
-                if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+                behaviourMap[i][j] = classify(collisionMap, i, j, piece);
+                if (collisionMap[i][j] == TILE_STATUS.WHITE || collisionMap[i][j] == TILE_STATUS.BLACK) {
                     break;
                 }
                 i++;
@@ -222,8 +251,8 @@ public class MovementSystem {
             i = x - 1;
             j = y;
             while (i < 8 && j < 8 && i >= 0 && j >= 0) {
-                behaviourMap[i][j] = classify(collisionMap, i, j);
-                if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+                behaviourMap[i][j] = classify(collisionMap, i, j, piece);
+                if (collisionMap[i][j] == TILE_STATUS.WHITE || collisionMap[i][j] == TILE_STATUS.BLACK) {
                     break;
                 }
                 i--;
@@ -240,7 +269,7 @@ public class MovementSystem {
                 dx = (int) Math.round(Math.cos(Math.toRadians(i)) * originalX - Math.sin(Math.toRadians(i)) * originalY);
                 dy = (int) Math.round(Math.sin(Math.toRadians(i)) * originalX + Math.cos(Math.toRadians(i)) * originalY);
                 if (x + dx < 8 && x + dx >= 0 && y + dy < 8 && y + dy >= 0) {
-                    behaviourMap[x + dx][y + dy] = classify(collisionMap, x + dx, y + dy);
+                    behaviourMap[x + dx][y + dy] = classify(collisionMap, x + dx, y + dy, piece);
                 }
             }
             originalX = -1;
@@ -249,7 +278,7 @@ public class MovementSystem {
                 dx = (int) Math.round(Math.cos(Math.toRadians(i)) * originalX - Math.sin(Math.toRadians(i)) * originalY);
                 dy = (int) Math.round(Math.sin(Math.toRadians(i)) * originalX + Math.cos(Math.toRadians(i)) * originalY);
                 if (x + dx < 8 && x + dx >= 0 && y + dy < 8 && y + dy >= 0) {
-                    behaviourMap[x + dx][y + dy] = classify(collisionMap, x + dx, y + dy);
+                    behaviourMap[x + dx][y + dy] = classify(collisionMap, x + dx, y + dy, piece);
                 }
             }
 
@@ -260,8 +289,8 @@ public class MovementSystem {
             int i = x + 1;
             int j = y + 1;
             while (i < 8 && j < 8 && i >= 0 && j >= 0) {
-                behaviourMap[i][j] = classify(collisionMap, i, j);
-                if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+                behaviourMap[i][j] = classify(collisionMap, i, j, piece);
+                if (collisionMap[i][j] == TILE_STATUS.WHITE || collisionMap[i][j] == TILE_STATUS.BLACK) {
                     break;
                 }
                 i++;
@@ -271,8 +300,8 @@ public class MovementSystem {
             i = x + 1;
             j = y - 1;
             while (i < 8 && j < 8 && i >= 0 && j >= 0) {
-                behaviourMap[i][j] = classify(collisionMap, i, j);
-                if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+                behaviourMap[i][j] = classify(collisionMap, i, j, piece);
+                if (collisionMap[i][j] == TILE_STATUS.WHITE || collisionMap[i][j] == TILE_STATUS.BLACK) {
                     break;
                 }
                 i++;
@@ -282,8 +311,8 @@ public class MovementSystem {
             i = x - 1;
             j = y + 1;
             while (i < 8 && j < 8 && i >= 0 && j >= 0) {
-                behaviourMap[i][j] = classify(collisionMap, i, j);
-                if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+                behaviourMap[i][j] = classify(collisionMap, i, j, piece);
+                if (collisionMap[i][j] == TILE_STATUS.WHITE || collisionMap[i][j] == TILE_STATUS.BLACK) {
                     break;
                 }
                 i--;
@@ -293,8 +322,8 @@ public class MovementSystem {
             i = x - 1;
             j = y - 1;
             while (i < 8 && j < 8 && i >= 0 && j >= 0) {
-                behaviourMap[i][j] = classify(collisionMap, i, j);
-                if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+                behaviourMap[i][j] = classify(collisionMap, i, j, piece);
+                if (collisionMap[i][j] == TILE_STATUS.WHITE || collisionMap[i][j] == TILE_STATUS.BLACK) {
                     break;
                 }
                 i--;
@@ -311,8 +340,8 @@ public class MovementSystem {
             i = x;
             j = y + 1;
             while (i < 8 && j < 8 && i >= 0 && j >= 0) {
-                behaviourMap[i][j] = classify(collisionMap, i, j);
-                if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+                behaviourMap[i][j] = classify(collisionMap, i, j, piece);
+                if (collisionMap[i][j] == TILE_STATUS.WHITE || collisionMap[i][j] == TILE_STATUS.BLACK) {
                     break;
                 }
                 j++;
@@ -321,8 +350,8 @@ public class MovementSystem {
             i = x;
             j = y - 1;
             while (i < 8 && j < 8 && i >= 0 && j >= 0) {
-                behaviourMap[i][j] = classify(collisionMap, i, j);
-                if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+                behaviourMap[i][j] = classify(collisionMap, i, j, piece);
+                if (collisionMap[i][j] == TILE_STATUS.WHITE || collisionMap[i][j] == TILE_STATUS.BLACK) {
                     break;
                 }
                 j--;
@@ -331,8 +360,8 @@ public class MovementSystem {
             i = x + 1;
             j = y;
             while (i < 8 && j < 8 && i >= 0 && j >= 0) {
-                behaviourMap[i][j] = classify(collisionMap, i, j);
-                if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+                behaviourMap[i][j] = classify(collisionMap, i, j, piece);
+                if (collisionMap[i][j] == TILE_STATUS.WHITE || collisionMap[i][j] == TILE_STATUS.BLACK) {
                     break;
                 }
                 i++;
@@ -341,8 +370,8 @@ public class MovementSystem {
             i = x - 1;
             j = y;
             while (i < 8 && j < 8 && i >= 0 && j >= 0) {
-                behaviourMap[i][j] = classify(collisionMap, i, j);
-                if (collisionMap[i][j] == TILE_STATUS.OCCUPIED) {
+                behaviourMap[i][j] = classify(collisionMap, i, j, piece);
+                if (collisionMap[i][j] == TILE_STATUS.WHITE || collisionMap[i][j] == TILE_STATUS.BLACK) {
                     break;
                 }
                 i--;

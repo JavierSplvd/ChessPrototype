@@ -11,6 +11,7 @@ import com.chess.screens.board.StateMachine;
 
 public class Piece extends Actor {
 
+    private int score = 0;
     Texture texture;
     int xBoardCoord;
     int yBoardCoord;
@@ -91,5 +92,13 @@ public class Piece extends Actor {
 
     public boolean isMoved() {
         return moved;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

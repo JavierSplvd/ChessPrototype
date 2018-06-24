@@ -1,9 +1,10 @@
 package com.chess.screens.board;
 
 import com.chess.Chess;
+import com.chess.ScoreSystem;
 import com.chess.screens.board.actors.AttackTile;
-import com.chess.screens.board.actors.MovementTile;
 import com.chess.screens.board.actors.MovementSystem;
+import com.chess.screens.board.actors.MovementTile;
 import com.chess.screens.board.actors.Tile;
 import com.chess.screens.board.actors.pieces.Piece;
 
@@ -17,11 +18,16 @@ public class StateMachine {
     private int turnCount = 0;
     private STATE currentState;
     StateMachineUI ui;
+    private ScoreSystem scoreSystem;
 
     private Piece pieceSelected;
     private Piece targetPiece;
 
     private MovementSystem movementSystem;
+
+    ScoreSystem getScoreSystem() {
+        return scoreSystem;
+    }
 
 
     public enum STATE {
@@ -33,6 +39,7 @@ public class StateMachine {
         this.pieceList = pieceList;
         playerTurn = Chess.PLAYER.WHITES;
         currentState = STATE.CHOOSE;
+        scoreSystem = new ScoreSystem();
         ui = new StateMachineUI(this);
     }
 
@@ -47,7 +54,7 @@ public class StateMachine {
     }
 
     private void updateUI() {
-        ui.update(playerTurn, currentState, getTurnCount());
+        ui.update(playerTurn, currentState, getTurnCount(), scoreSystem.getWhiteScore(), scoreSystem.getBlackScore());
     }
 
     private void changeTurn() {
@@ -74,7 +81,7 @@ public class StateMachine {
         return playerTurn.toString();
     }
 
-    public STATE getState(){
+    public STATE getState() {
         return currentState;
     }
 
@@ -122,6 +129,7 @@ public class StateMachine {
         System.out.println("Attack");
         targetPiece = attackTile.getTargetPiece();
         pieceList.remove(targetPiece);
+        scoreSystem.addScore(targetPiece);
         targetPiece.remove();
         movePieceTo(attackTile.getxBoardCoord(), attackTile.getyBoardCoord());
         movementSystem.clear();

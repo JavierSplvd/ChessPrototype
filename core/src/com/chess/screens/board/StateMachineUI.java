@@ -22,8 +22,8 @@ public class StateMachineUI {
         player = new Label(stateMachine.getPlayerTurn(), skin);
         state = new Label(stateMachine.getCurrentState(), skin);
         turnCount = new Label(stateMachine.getTurnCount(), skin);
-        whiteScore = new Label(stateMachine.getScoreSystem().getWhiteScore(),skin);
-        blackScore = new Label(stateMachine.getScoreSystem().getBlackScore(),skin);
+        whiteScore = new Label(stateMachine.getScoreSystem().getTextWhiteScore(),skin);
+        blackScore = new Label(stateMachine.getScoreSystem().getTextBlackScore(),skin);
         table.add(player).pad(0, 20, 0, 20);
         table.add(state).pad(0, 20, 0, 20);
         table.add(turnCount);

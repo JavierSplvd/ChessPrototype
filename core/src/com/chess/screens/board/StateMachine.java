@@ -31,7 +31,7 @@ public class StateMachine {
 
 
     public enum STATE {
-        CHOOSE, MOVE;
+        CHOOSE, MOVE, WHITE_WINS, BLACK_WINS;
 
     }
 
@@ -44,6 +44,12 @@ public class StateMachine {
     }
 
     public void nextState() {
+        if (checkWhiteWinCondition()) {
+            currentState = STATE.WHITE_WINS;
+        } else if (checkBlackWinCondition()){
+            currentState = STATE.BLACK_WINS;
+        }
+
         if (currentState == STATE.CHOOSE) {
             currentState = STATE.MOVE;
         } else if (currentState == STATE.MOVE) {
@@ -53,8 +59,17 @@ public class StateMachine {
         updateUI();
     }
 
+    private boolean checkWhiteWinCondition() {
+        return scoreSystem.getWhiteScore() >= 100;
+    }
+
+    private boolean checkBlackWinCondition() {
+        return scoreSystem.getBlackScore() >= 100;
+    }
+
+
     private void updateUI() {
-        ui.update(playerTurn, currentState, getTurnCount(), scoreSystem.getWhiteScore(), scoreSystem.getBlackScore());
+        ui.update(playerTurn, currentState, getTurnCount(), scoreSystem.getTextWhiteScore(), scoreSystem.getTextBlackScore());
     }
 
     private void changeTurn() {

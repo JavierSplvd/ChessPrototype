@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.chess.screens.board.BoardScreen;
 import com.chess.screens.LoadingScreen;
 import com.chess.screens.MainMenuScreen;
+import com.chess.screens.board.StateMachine;
 
 public class Chess extends Game {
 
@@ -30,6 +31,14 @@ public class Chess extends Game {
     @Override
     public void render() {
         getScreen().render(Gdx.graphics.getDeltaTime());
+        if (getScreen() instanceof BoardScreen) {
+            if (((BoardScreen) getScreen()).getStateMachine().getState() == StateMachine.STATE.WHITE_WINS || ((BoardScreen) getScreen()).getStateMachine().getState() == StateMachine.STATE.BLACK_WINS){
+                if(((BoardScreen) getScreen()).getTimeInWinState() > 5){
+                    getScreen().dispose();
+                    changeScreenTo(0);
+                }
+            }
+        }
     }
 
     @Override
@@ -40,15 +49,11 @@ public class Chess extends Game {
         getScreen().dispose();
         switch (screen) {
             case MENU:
-                if (mainMenuScreen == null) {
-                    mainMenuScreen = new MainMenuScreen(this);
-                }
+                mainMenuScreen = new MainMenuScreen(this);
                 this.setScreen(mainMenuScreen);
                 break;
             case BOARD:
-                if (boardScreen == null) {
-                    boardScreen = new BoardScreen(this);
-                }
+                boardScreen = new BoardScreen(this);
                 this.setScreen(boardScreen);
                 break;
         }

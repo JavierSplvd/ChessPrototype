@@ -26,6 +26,12 @@ public class BoardScreen implements Screen {
     private MovementSystem movementSystem;
     private ArrayList<Piece> pieceList;
 
+    public float getTimeInWinState() {
+        return timeInWinState;
+    }
+
+    private float timeInWinState;
+
     public BoardScreen(Chess chess) {
         chess.resourceManager.loadBoardResources();
         this.chess = chess;
@@ -43,13 +49,14 @@ public class BoardScreen implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("Stage: touch down");
-                if(stateMachine.getState() == StateMachine.STATE.MOVE){
+                if (stateMachine.getState() == StateMachine.STATE.MOVE) {
                     stateMachine.returnToChooseState();
                     return true;
                 }
                 return false;
             }
         });
+        timeInWinState = 0;
     }
 
     private void createStage() {
@@ -59,7 +66,7 @@ public class BoardScreen implements Screen {
     }
 
     private void initializeMovementTiles() {
-        movementSystem = new MovementSystem(chess.resourceManager.getMovementTileTexture(),chess.resourceManager.getAttackTileTexture(), this);
+        movementSystem = new MovementSystem(chess.resourceManager.getMovementTileTexture(), chess.resourceManager.getAttackTileTexture(), this);
         stage.addActor(movementSystem.getGroup());
         stateMachine.setMovementSystem(movementSystem);
     }
@@ -164,6 +171,9 @@ public class BoardScreen implements Screen {
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
+        if (stateMachine.getState() == StateMachine.STATE.WHITE_WINS || stateMachine.getState() == StateMachine.STATE.BLACK_WINS) {
+            timeInWinState += delta;
+        }
     }
 
     @Override
@@ -214,11 +224,12 @@ public class BoardScreen implements Screen {
         }
         return false;
     }
+
     // Check if the piece at i,j is white
     public boolean checkIfItIsWhite(int i, int j) {
         for (Piece piece : pieceList) {
             if (i == piece.getxBoardCoord() && j == piece.getyBoardCoord()) {
-                if(piece.getPlayer() == Chess.PLAYER.WHITES){
+                if (piece.getPlayer() == Chess.PLAYER.WHITES) {
                     return true;
                 }
             }

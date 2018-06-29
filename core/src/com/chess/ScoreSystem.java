@@ -15,11 +15,19 @@ public class ScoreSystem {
         }
     }
 
-    public String getBlackScore() {
+    public String getTextBlackScore() {
         return String.valueOf(blackScore);
     }
 
-    public String getWhiteScore() {
+    public String getTextWhiteScore() {
         return String.valueOf(whiteScore);
+    }
+
+    public int getWhiteScore() {
+        return whiteScore;
+    }
+
+    public int getBlackScore() {
+        return blackScore;
     }
 }
